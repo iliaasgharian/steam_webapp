@@ -1,0 +1,39 @@
+/* About, Game Mixer teaser and Contact pages */
+
+  /* ================= ABOUT PAGE ================= */
+  .about-block { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:16px; }
+  .about-card { border:1px solid var(--border); border-radius:12px; padding:22px; background:var(--surface); }
+  .about-card.problem { border-color: rgba(229,56,79,0.35); }
+  .about-card.solution { border-color: rgba(15,163,122,0.35); }
+  .about-card h3 { font-size:15px; margin-bottom:12px; }
+  .about-card ul li { font-size:13px; color:var(--text-dim); padding:6px 0; padding-left:16px; position:relative; }
+  .about-card ul li::before { content:"—"; position:absolute; left:0; color:var(--text-faint); }
+  .roadmap { display:flex; flex-direction:column; border-left:2px solid var(--border); margin-left:6px; }
+  .rm-item { position:relative; padding: 4px 0 26px 24px; }
+  .rm-item::before { content:""; position:absolute; left:-7px; top:4px; width:12px; height:12px; border-radius:50%; background:var(--surface); border:2px solid var(--text-faint); }
+  .rm-item.done::before { border-color: var(--good); background: var(--good); }
+  .rm-item.next::before { border-color: var(--accent); background: var(--accent); }
+  .rm-status { font-size:10.5px; font-family:var(--font-mono); color:var(--text-faint); text-transform:uppercase; }
+  .rm-item h4 { font-size:14px; margin:4px 0 4px; }
+  .rm-item p { font-size:12.5px; color:var(--text-dim); margin:0; }
+
+  /* ================= MIXER TEASER ================= */
+  .mixer-demo { display:flex; align-items:center; justify-content:center; gap:18px; margin: 30px 0 8px; flex-wrap:wrap; }
+  .mixer-slot { width:150px; height:180px; border-radius:12px; border:1.5px dashed var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-faint); font-size:12.5px; text-align:center; padding:10px; }
+  .mixer-slot.filled { border-style:solid; color:var(--text); background:var(--surface); }
+  .mixer-plus { font-family:var(--font-display); font-size:22px; color:var(--text-faint); }
+  .mixer-result { width:170px; height:200px; border-radius:12px; background:linear-gradient(135deg, var(--accent), var(--good)); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; text-align:center; padding:14px; font-size:13px; }
+  .notify-row { display:flex; gap:10px; max-width:420px; margin: 26px auto 0; }
+  .notify-row input { flex:1; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-m); padding:11px 14px; color:var(--text); font-size:13.5px; }
+  .notify-row input:focus { outline:none; border-color:var(--accent); }
+
+  /* ================= CONTACT ================= */
+  .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+  .field { margin-bottom:16px; }
+  .field label { display:block; font-size:12px; color:var(--text-dim); margin-bottom:6px; }
+  .field input, .field textarea { width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-m); padding:10px 12px; color:var(--text); font-size:13.5px; font-family:inherit; }
+  .field input:focus, .field textarea:focus { outline:none; border-color:var(--accent); }
+  .contact-info-row { display:flex; align-items:flex-start; gap:12px; padding:14px 0; border-bottom:1px solid var(--border-soft); }
+  .contact-info-row svg { color:var(--accent); flex:none; margin-top:2px; }
+  .contact-info-row b { display:block; font-size:13px; }
+  .contact-info-row span { font-size:12.5px; color:var(--text-dim); }

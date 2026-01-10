@@ -1,0 +1,29 @@
+/* Browse page, filters and genre landing cards */
+
+  /* ================= BROWSE / FILTERS ================= */
+  .browse-layout { display:grid; grid-template-columns:220px 1fr; gap:26px; align-items:start; }
+  .filter-panel { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; position:sticky; top: calc(var(--nav-h) + 20px); }
+  .filter-group { margin-bottom:20px; }
+  .filter-group:last-child { margin-bottom:0; }
+  .filter-title { font-size:12px; font-weight:600; color:var(--text-dim); margin-bottom:10px; }
+  .check-row { display:flex; align-items:center; gap:9px; padding:5px 0; font-size:13px; color:var(--text-dim); }
+  .check-row input { accent-color: var(--accent); width:14px; height:14px; }
+  .check-row.on { color:var(--text); }
+  .check-count { margin-left:auto; font-size:11px; color:var(--text-faint); font-family:var(--font-mono); }
+  .range-track { height:4px; background:var(--border); border-radius:2px; position:relative; margin:14px 2px 6px; }
+  .range-fill { position:absolute; left:12%; right:55%; top:0; bottom:0; background:var(--accent); border-radius:2px; }
+  .range-handle { width:13px; height:13px; border-radius:50%; background:var(--accent); position:absolute; top:50%; transform:translate(-50%,-50%); border:2px solid #fff; }
+  .range-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--text-faint); font-family:var(--font-mono); }
+  .plat-row { display:flex; gap:6px; }
+  .plat-btn { flex:1; text-align:center; padding:6px 0; border-radius:var(--radius-s); border:1px solid var(--border); font-size:11.5px; color:var(--text-faint); }
+  .plat-btn.on { border-color:var(--accent); color:var(--text); background:var(--accent-wash); }
+  .browse-toolbar { display:flex; align-items:center; margin-bottom:16px; }
+  .result-count { font-size:13px; color:var(--text-dim); }
+  .sort-select { margin-left:auto; background:var(--surface-2); border:1px solid var(--border); color:var(--text); font-size:12.5px; padding:7px 10px; border-radius:var(--radius-s); }
+
+  /* Genre landing cards */
+  .genre-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .genre-card { border:1px solid var(--border); border-radius:12px; padding:20px; position:relative; overflow:hidden; }
+  .genre-card .g-count { font-size:11.5px; color:var(--text-faint); font-family:var(--font-mono); }
+  .genre-card h3 { font-size:16px; margin:6px 0 0; }
+  .genre-card .g-dot { width:26px; height:26px; border-radius:7px; margin-bottom:10px; }

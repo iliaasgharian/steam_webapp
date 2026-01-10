@@ -1,0 +1,11 @@
+/* Steam Intelligence tab cards */
+
+/* Steam Intelligence — hybrid analytics layer */
+.intel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.intel-card{position:relative;overflow:hidden;border:1px solid rgba(111,79,240,.22);border-radius:18px;padding:20px;background:linear-gradient(145deg,rgba(28,33,43,.82),rgba(15,18,25,.9));box-shadow:0 18px 50px rgba(40,50,80,0.068)}
+.intel-card:before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;right:-70px;top:-75px;background:rgba(15,163,122,.10);filter:blur(4px)}
+.intel-card h3{margin:0 0 7px;font-size:17px}.intel-kicker{font:600 11px var(--font-mono);letter-spacing:.12em;color:var(--accent);text-transform:uppercase}.intel-value{font-size:30px;font-weight:800;margin:8px 0 2px}.intel-muted{color:var(--text-dim);font-size:12px}.intel-positive{color:var(--good)}.intel-negative{color:var(--bad)}
+.intel-list{display:grid;gap:9px;margin-top:15px}.intel-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}.intel-row:last-child{border-bottom:0}.intel-row span:first-child{color:var(--text-dim)}
+.timeline{display:grid;gap:0;margin-top:14px}.timeline-item{position:relative;padding:0 0 18px 22px;border-left:1px solid #D3D8E1}.timeline-item:last-child{border-left-color:transparent}.timeline-item:before{content:"";position:absolute;left:-5px;top:2px;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(111,79,240,.12)}.timeline-item b{display:block;font-size:13px}.timeline-item span{font-size:11px;color:var(--text-dim)}
+.data-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}.data-pill{padding:7px 10px;border-radius:999px;background:rgba(111,79,240,.09);border:1px solid rgba(111,79,240,.18);font-size:11px;color:var(--accent-dim)}.intel-table{width:100%;border-collapse:collapse;margin-top:12px}.intel-table th,.intel-table td{text-align:left;padding:9px 7px;border-bottom:1px solid var(--border);font-size:12px}.intel-table th{color:var(--text-dim);font-weight:600}.intel-table td:last-child,.intel-table th:last-child{text-align:right}
+@media(max-width:720px){.intel-grid{grid-template-columns:1fr}.intel-card{padding:16px}.intel-value{font-size:25px}.intel-table{min-width:460px}.intel-card.table-wrap{overflow-x:auto}}

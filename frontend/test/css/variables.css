@@ -1,0 +1,29 @@
+/* Design tokens — colors, radius, fonts. Change the look of the whole site from here. */
+
+  :root {
+    color-scheme: light;
+    --bg: #ECEEF2;
+    --surface: #FFFFFF;
+    --surface-2: #F4F5F8;
+    --raised: #FFFFFF;
+    --border: #DADEE6;
+    --border-soft: #E4E7ED;
+    --text: #161A22;
+    --text-dim: #565E6E;
+    --text-faint: #8890A0;
+    --accent: #6F4FF0;
+    --accent-dim: #5A3DD6;
+    --accent-wash: rgba(111,79,240,0.10);
+    --good: #0FA37A;
+    --good-wash: rgba(15,163,122,0.12);
+    --gold: #D98300;
+    --gold-wash: rgba(217,131,0,0.12);
+    --bad: #E5384F;
+    --blue: #1C86A8;
+    --nav-h: 64px;
+    --radius-s: 4px;
+    --radius-m: 6px;
+    --font-display: 'Space Grotesk', 'Arial Narrow', sans-serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }

@@ -1,0 +1,20 @@
+/* Page layout: containers, sections, headings */
+
+  /* ================= LAYOUT ================= */
+  .page { max-width: 1180px; margin:0 auto; padding: 0 28px 0; }
+  .page-narrow { max-width: 880px; }
+  .section { padding: 64px 0; }
+  .section-tight { padding: 34px 0; }
+  .reveal { opacity:0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity:1; transform:none; }
+
+  h1,h2,h3 { font-family: var(--font-display); margin:0; }
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:7px; font-size:11.5px; font-weight:600;
+    color: var(--good); background: var(--good-wash); border:1px solid rgba(15,163,122,0.35);
+    padding:4px 10px; border-radius:20px; margin-bottom:16px;
+  }
+  .live-dot { width:6px; height:6px; border-radius:50%; background:var(--good); box-shadow:0 0 0 3px var(--good-wash); animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+  .chip { font-size:11px; font-weight:500; padding:3px 9px; border-radius:20px; border:1px solid var(--border); color:var(--text-dim); background:var(--surface-2); }
