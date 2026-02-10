@@ -16,7 +16,10 @@ function route(){
   const path = currentPath();
   const parts = path.split("/").filter(Boolean);
   setActiveNav("/" + (parts[0]||""));
-  if (parts[0] === "game" && parts[1]) renderDetail(parts[1]);
+  if (parts[0] === "login") renderLogin();
+  else if (parts[0] === "signup" || parts[0] === "register") renderSignup();
+  else if (parts[0] === "panel") renderAccountPanel();
+  else if (parts[0] === "game" && parts[1]) renderDetail(parts[1]);
   else if (["popular","top-week","top-month","wishlisted","free-games","bundles","upcoming"].includes(parts[0])) renderCollection(parts[0]);
   else if (parts[0] === "developers") renderPeoplePage("Developers", DEVELOPERS, "STUDIOS");
   else if (parts[0] === "publishers") renderPeoplePage("Publishers", PUBLISHERS, "PUBLISHERS");
