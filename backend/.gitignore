@@ -1,0 +1,4 @@
+steam_games.db
+__pycache__/
+*.pyc
+.env
