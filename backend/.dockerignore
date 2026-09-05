@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+test_steam_games.db
+steam_games.db
+.git
+.gitignore
