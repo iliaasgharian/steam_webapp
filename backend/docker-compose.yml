@@ -1,0 +1,45 @@
+# Runs the backend and a PostgreSQL database together, wired to talk
+# to each other automatically.
+#
+# Usage:
+#   docker-compose up --build       (start both, rebuilding the backend image)
+#   docker-compose down             (stop and remove both containers)
+#   docker-compose down -v          (also delete the database's stored data)
+
+services:
+  db:
+    image: postgres:16
+    container_name: steam-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: steam_user
+      POSTGRES_PASSWORD: steam_password
+      POSTGRES_DB: steam_games
+    ports:
+      # Exposed on the host too, in case you want to connect with a
+      # GUI tool (e.g. pgAdmin, DBeaver) for a closer look.
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U steam_user -d steam_games"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    container_name: steam-backend-container
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # "db" below is the service name above — Docker Compose gives it
+      # a DNS entry on the shared network automatically.
+      DATABASE_URL: postgresql://steam_user:steam_password@db:5432/steam_games
+    ports:
+      - "9000:8000"
+
+volumes:
+  postgres_data:
