@@ -15,6 +15,10 @@ services:
       POSTGRES_USER: steam_user
       POSTGRES_PASSWORD: steam_password
       POSTGRES_DB: steam_games
+    # Raised from the default 100 to give headroom above (workers x
+    # pool_size+max_overflow) in app/database.py, plus room for
+    # tools like psql/pgAdmin connecting separately.
+    command: ["postgres", "-c", "max_connections=200"]
     ports:
       # Exposed on the host too, in case you want to connect with a
       # GUI tool (e.g. pgAdmin, DBeaver) for a closer look.

@@ -51,11 +51,20 @@ else:
     # PostgreSQL (or any other real database server): connections are
     # cheap to pool since the server itself handles concurrent writers
     # properly, unlike SQLite's single-file lock.
+    #
+    # Sizing note: PostgreSQL's own max_connections defaults to 100.
+    # Each uvicorn worker process gets its OWN pool, so the real ceiling
+    # is (number of workers) x (pool_size + max_overflow). With 4 workers,
+    # 20+40=60 per worker would allow up to 240 connections — comfortably
+    # over PostgreSQL's limit, causing "sorry, too many clients already"
+    # under load. Kept well under 100 total here (4 workers x 20 = 80)
+    # with room to spare. Raise PostgreSQL's max_connections (in
+    # docker-compose.yml) if you increase workers or these pool sizes.
     engine = create_engine(
         DATABASE_URL,
         poolclass=QueuePool,
-        pool_size=20,
-        max_overflow=40,
+        pool_size=5,
+        max_overflow=15,
         pool_timeout=30,
         pool_pre_ping=True,  # detects and recovers from dropped connections
     )
