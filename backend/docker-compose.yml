@@ -18,7 +18,32 @@ services:
     # Raised from the default 100 to give headroom above (workers x
     # pool_size+max_overflow) in app/database.py, plus room for
     # tools like psql/pgAdmin connecting separately.
-    command: ["postgres", "-c", "max_connections=200"]
+    #
+    # Additional tuning based on stress testing (pgbench):
+    #   shared_buffers: PostgreSQL's own data cache. Default (128MB) is
+    #     tiny; ~25% of available container RAM is a common starting
+    #     point. Set to 2GB here assuming ~8GB is available to Docker/WSL.
+    #   work_mem: per-operation memory for sorts/joins. Raised from the
+    #     1-4MB default since many concurrent connections each doing
+    #     small operations benefit from not spilling to disk.
+    #   effective_cache_size: hint to the query planner about how much
+    #     memory (including OS-level disk cache) is realistically
+    #     available for caching — doesn't allocate anything itself.
+    #   max_wal_size: lets more write-ahead-log accumulate between
+    #     checkpoints, trading some crash-recovery time for fewer,
+    #     less disruptive checkpoint pauses under heavy write load.
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=200"
+      - "-c"
+      - "shared_buffers=2GB"
+      - "-c"
+      - "work_mem=16MB"
+      - "-c"
+      - "effective_cache_size=4GB"
+      - "-c"
+      - "max_wal_size=2GB"
     ports:
       # Exposed on the host too, in case you want to connect with a
       # GUI tool (e.g. pgAdmin, DBeaver) for a closer look.
