@@ -56,17 +56,38 @@ services:
       timeout: 5s
       retries: 5
 
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    container_name: steam-pgbouncer
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+      - ./pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt:ro
+    ports:
+      # Exposed on the host for direct pgbench/psql testing against
+      # the pooler itself, separate from the backend's own connection.
+      - "6432:6432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -p 6432 -U steam_user -d steam_games"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend:
     build: .
     container_name: steam-backend-container
     restart: unless-stopped
     depends_on:
-      db:
+      pgbouncer:
         condition: service_healthy
     environment:
-      # "db" below is the service name above — Docker Compose gives it
-      # a DNS entry on the shared network automatically.
-      DATABASE_URL: postgresql://steam_user:steam_password@db:5432/steam_games
+      # Now points at pgbouncer (not the db service directly) — the
+      # backend is unaware pooling is even happening, since PgBouncer
+      # speaks the same PostgreSQL wire protocol.
+      DATABASE_URL: postgresql://steam_user:steam_password@pgbouncer:6432/steam_games
     ports:
       - "9000:8000"
 
