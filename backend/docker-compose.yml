@@ -44,6 +44,8 @@ services:
       - "effective_cache_size=4GB"
       - "-c"
       - "max_wal_size=2GB"
+      - "-c"
+      - "synchronous_commit=off"
     ports:
       # Exposed on the host too, in case you want to connect with a
       # GUI tool (e.g. pgAdmin, DBeaver) for a closer look.
