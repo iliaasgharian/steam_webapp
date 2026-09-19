@@ -63,9 +63,9 @@ else:
     engine = create_engine(
         DATABASE_URL,
         poolclass=QueuePool,
-        pool_size=5,
-        max_overflow=15,
-        pool_timeout=30,
+        pool_size=30,
+        max_overflow=50,
+        pool_timeout=10,
         pool_pre_ping=True,  # detects and recovers from dropped connections
     )
 
