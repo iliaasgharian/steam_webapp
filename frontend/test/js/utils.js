@@ -23,31 +23,29 @@ function gameTile(g){
   const trendEmoji=trend>2?'📈':trend<-1?'📉':'➖';
   const trendLabel=trend>2?'Rising':trend<-1?'Cooling':'Stable';
   const current=g.discount?money(g.price*(1-g.discount/100)):money(g.price);
-  return `<a class="tile game-tile" href="#/game/${g.id}">
-    ${tileArt(g)}
-    <div class="tile-body">
-      <div class="tile-name">${g.name}</div>
-      <div class="tile-tags">${tags.slice(0,2).map(tagChip).join('')}</div>
-      <div class="tile-foot">
-        <div class="price">${g.discount?`<span class="strike">${money(g.price)}</span><span class="now">${current}</span>`:current}</div>
-        <div class="players-mini">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
-          ${fmt(g.players||0)}
+  const saved=getPlaybaseWishlist ? getPlaybaseWishlist() : [];
+  const inWishlist=saved.includes(String(g.id));
+  return `<div class="tile-wrap">
+    <a class="tile game-tile" href="#/game/${g.id}">
+      ${tileArt(g)}
+      <div class="tile-body">
+        <div class="tile-name">${g.name}</div>
+        <div class="tile-tags">${tags.slice(0,2).map(tagChip).join('')}</div>
+        <div class="tile-foot">
+          <div class="price">${g.discount?`<span class="strike">${money(g.price)}</span><span class="now">${current}</span>`:current}</div>
+          <div class="players-mini"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>${fmt(g.players||0)}</div>
         </div>
       </div>
-    </div>
-    <div class="tile-hover-panel">
-      <div class="tile-hover-top"><span class="hover-status">${trendEmoji} ${trendLabel}</span><span class="hover-rating">⭐ ${rating}%</span></div>
-      <div class="tile-hover-title">${g.name}</div>
-      <div class="tile-hover-meta"><span>👤 ${g.developer||'Northwake Studio'}</span><span>📅 ${g.releaseDate||'TBA'}</span></div>
-      <div class="tile-hover-stats">
-        <div><b>${fmt(g.players||0)}</b><span>Players now</span></div>
-        <div><b>${fmt(peak)}</b><span>24h peak</span></div>
-        <div><b>${fmt(g.reviewCount||0)}</b><span>Reviews</span></div>
+      <div class="tile-hover-panel">
+        <div class="tile-hover-top"><span class="hover-status">${trendEmoji} ${trendLabel}</span><span class="hover-rating">⭐ ${rating}%</span></div>
+        <div class="tile-hover-title">${g.name}</div>
+        <div class="tile-hover-meta"><span>👤 ${g.developer||'Northwake Studio'}</span><span>📅 ${g.releaseDate||'TBA'}</span></div>
+        <div class="tile-hover-stats"><div><b>${fmt(g.players||0)}</b><span>Players now</span></div><div><b>${fmt(peak)}</b><span>24h peak</span></div><div><b>${fmt(g.reviewCount||0)}</b><span>Reviews</span></div></div>
+        <div class="tile-hover-tags">${tags.slice(0,4).map(tagChip).join('')}</div>
       </div>
-      <div class="tile-hover-tags">${tags.slice(0,4).map(tagChip).join('')}</div>
-    </div>
-  </a>`;
+    </a>
+    <button class="wishlist-add${inWishlist?' is-saved':''}" data-wishlist-id="${String(g.id).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" type="button" aria-pressed="${inWishlist}">${inWishlist?'♥ In wishlist':'♡ Add to wishlist'}</button>
+  </div>`;
 }
 function sparkline(seed,color,w=120,h=32){
   let v=50,pts=[];

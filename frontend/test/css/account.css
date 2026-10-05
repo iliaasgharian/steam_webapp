@@ -28,3 +28,49 @@
 .signup-card .account-form{gap:8px}
 .signup-card .account-form>label{margin-top:4px}
 @media(max-width:680px){.signup-wrap{grid-template-columns:1fr;max-width:460px;gap:28px}.signup-intro{gap:12px}.signup-intro .login-brand{margin-bottom:8px}.signup-intro h1{font-size:36px}.signup-intro>p{margin:0}.signup-card{padding:25px 21px}}
+
+/* Requested navigation and wishlist updates */
+.nav-account-left{flex:0 0 auto;margin:0 22px 0 0;background:#0FA37A!important;color:#fff!important;min-width:88px;padding:10px 16px;border-radius:8px;box-shadow:0 4px 12px rgba(15,163,122,.12)}
+.nav-account-left:hover{background:#0b8966!important;color:#fff!important;box-shadow:0 7px 18px rgba(15,163,122,.22)}
+.nav-account-left .account-avatar{background:rgba(255,255,255,.2);color:#fff}
+.tile-wrap{position:relative;display:flex;flex-direction:column;min-width:0;align-self:stretch}
+.tile-wrap>.tile{height:100%;min-width:0}
+.wishlist-add{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:34px;margin-top:6px;padding:8px 10px;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text-dim);font:600 10px var(--font-body);cursor:pointer;transition:background .16s,border-color .16s,color .16s}
+.wishlist-add:hover{border-color:var(--good);color:var(--good);background:var(--good-wash)}
+.wishlist-add.is-saved{background:var(--good-wash);border-color:rgba(15,163,122,.35);color:#087957}
+.wishlist-panel-note{margin:20px 0 12px;color:var(--text-dim);font-size:12px}
+.wishlist-panel-grid{margin-top:14px}
+
+/* Account dashboard follows the site's light visual system */
+.panel-page{background:var(--bg)!important;color:var(--text)!important}
+.panel-shell{background:var(--surface)!important;border-color:var(--border)!important;box-shadow:0 18px 55px rgba(35,42,60,.07)}
+.panel-sidebar{background:var(--surface-2)!important;border-color:var(--border)!important}
+.panel-brand{border-color:var(--border)!important;color:var(--text)!important}
+.panel-brand small,.panel-user-mini small{color:var(--text-faint)!important}
+.panel-nav-label{color:var(--text-faint)!important}
+.panel-nav{color:var(--text-dim)!important}
+.panel-nav:hover,.panel-nav.active{background:var(--accent-wash)!important;color:var(--accent)!important}
+.panel-sidebar-bottom{border-color:var(--border)!important}
+.panel-sidebar-bottom a,.panel-sidebar-bottom button{color:var(--text-dim)!important}
+.panel-main{background:var(--surface)!important}
+.panel-topbar{border-color:var(--border)!important}
+.panel-breadcrumb{color:var(--text-faint)!important}
+.panel-topbar h1,.panel-box h3,.panel-welcome h2,.panel-stat-card>b,.summary-profile b,.summary-line b,.panel-empty h2{color:var(--text)!important}
+.panel-explore{background:var(--accent)!important;color:#fff!important}
+.panel-welcome{background:linear-gradient(120deg,#fff,#f3f1ff)!important;border-color:#e0dcfb!important}
+.panel-welcome p{color:var(--text-dim)!important}
+.welcome-mark{color:#fff!important;background:var(--accent)!important}
+.panel-stat-card,.panel-box{background:var(--surface)!important;border-color:var(--border)!important;color:var(--text)!important;box-shadow:0 4px 18px rgba(35,42,60,.035)}
+.panel-stat-card>span,.panel-stat-card small,.panel-action-row small,.summary-profile small,.summary-line span,.settings-description,.panel-empty p{color:var(--text-faint)!important}
+.panel-action-row{border-color:var(--border)!important;color:var(--text)!important}
+.panel-action-row:hover b,.panel-action-button:hover b{color:var(--accent)!important}
+.panel-empty>span{background:var(--accent-wash)!important;border-color:rgba(111,79,240,.16)!important;color:var(--accent)!important}
+.panel-empty h2{color:var(--text)!important}
+.summary-line{border-color:var(--border)!important}
+.account-summary .summary-edit{color:var(--accent)!important}
+.panel-settings .account-form label{color:var(--text)!important}
+.panel-settings .account-form input{background:var(--surface-2)!important;color:var(--text)!important;border-color:var(--border)!important}
+.panel-settings .account-secondary{background:var(--surface)!important;color:var(--text-dim)!important;border-color:var(--border)!important}
+.panel-settings .prototype-note{color:var(--text-faint)!important;border-color:var(--border)!important}
+@media(max-width:980px){.nav-account-left{display:none}}
+@media(max-width:680px){.tile-wrap{min-width:0}.wishlist-add{font-size:10px;padding:8px 5px}.panel-welcome{background:linear-gradient(120deg,#fff,#f3f1ff)!important}}
