@@ -183,3 +183,10 @@
 .wishlist-add.wishlist-heart.is-saved{color:#e63950;background:#fff0f2;border-color:#f3a2ae;}
 .detail-wishlist{margin:2px 0 16px;}
 @media(max-width:680px){.wishlist-add.wishlist-heart{right:8px;bottom:8px;width:30px;height:30px;min-height:30px}.detail-wishlist{width:100%;}}
+
+
+/* Keep the wishlist heart visible and clickable while the game hover preview is open. */
+.tile-wrap{position:relative;isolation:isolate;}
+.tile-wrap:hover{z-index:60;}
+.tile-wrap>.wishlist-heart{position:absolute!important;right:10px!important;bottom:10px!important;z-index:100!important;display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;}
+.tile-wrap>.tile:hover+.wishlist-heart,.tile-wrap:hover>.wishlist-heart{visibility:visible!important;opacity:1!important;}

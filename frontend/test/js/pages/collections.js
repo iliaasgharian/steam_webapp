@@ -54,7 +54,7 @@ function renderPeoplePage(title,people,k){
       </div>
       <div class="hybrid-section-label reveal"><div><span>${publisher?'PUBLISHING NETWORK':'STUDIO DIRECTORY'}</span><h2>Explore the ${publisher?'publishers':'developers'}</h2></div><span>Curated prototype profiles</span></div>
       <div class="person-grid hybrid-people-grid reveal">
-        ${people.map((p,i)=>{const count=2+(i%3);const color=colors[i%colors.length];return `<a class="person-card hybrid-person-card" href="#/browse" style="--person-color:${color}">
+        ${people.map((p,i)=>{const count=2+(i%3);const color=colors[i%colors.length];return `<a class="person-card hybrid-person-card" href="#/browse" data-person-type="${publisher?'publisher':'developer'}" data-person-name="${p.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" style="--person-color:${color}">
           <div class="person-avatar" style="color:${color};border-color:${color}55">${p.split(' ').map(x=>x[0]).join('').slice(0,2)}</div>
           <h3>${p}</h3><p>${publisher?'Publisher profile':'Independent development studio'} · ${count} featured games</p>
           <div class="person-meta"><span class="person-pill">${publisher?'Publishing':'Development'}</span><span class="person-pill">${count} games</span></div>
@@ -62,5 +62,8 @@ function renderPeoplePage(title,people,k){
         </a>`}).join('')}
       </div>
     </div>`;
+  view.querySelectorAll('.hybrid-person-card').forEach(card=>card.addEventListener('click',()=>{
+    try{localStorage.setItem('playbaseCatalogSelection',JSON.stringify({type:card.dataset.personType,value:card.dataset.personName}));}catch(e){}
+  }));
   armReveals();
 }
