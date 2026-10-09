@@ -189,3 +189,12 @@
 .wishlist-heart-icon{display:block;width:17px;height:17px;fill:transparent;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:fill .16s ease,color .16s ease,transform .16s ease;}
 .wishlist-add.wishlist-heart:hover .wishlist-heart-icon{transform:scale(1.04);}
 .wishlist-add.wishlist-heart.is-saved .wishlist-heart-icon{fill:currentColor;stroke:currentColor;}
+
+
+/* Keep the wishlist heart visible and above the game's hover preview. */
+.tile-wrap{position:relative;isolation:isolate;overflow:visible;}
+.tile-wrap>.wishlist-add.wishlist-heart{z-index:1000!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;display:flex!important;}
+.tile-wrap:hover>.wishlist-add.wishlist-heart,
+.tile-wrap:focus-within>.wishlist-add.wishlist-heart{z-index:1001!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;}
+.tile-wrap>.tile.game-tile{position:relative;z-index:1;}
+.tile-wrap>.tile.game-tile:hover{z-index:2;}
