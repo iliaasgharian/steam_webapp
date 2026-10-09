@@ -44,7 +44,7 @@ function gameTile(g){
         <div class="tile-hover-tags">${tags.slice(0,4).map(tagChip).join('')}</div>
       </div>
     </a>
-    <button class="wishlist-add${inWishlist?' is-saved':''}" data-wishlist-id="${String(g.id).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" type="button" aria-pressed="${inWishlist}">${inWishlist?'♥ In wishlist':'♡ Add to wishlist'}</button>
+    <button class="wishlist-add wishlist-heart${inWishlist?' is-saved':''}" data-wishlist-id="${String(g.id).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" type="button" aria-label="${inWishlist?'Remove from wishlist':'Add to wishlist'}" title="${inWishlist?'Remove from wishlist':'Add to wishlist'}" aria-pressed="${inWishlist}">${inWishlist?'♥':'♡'}</button>
   </div>`;
 }
 function sparkline(seed,color,w=120,h=32){

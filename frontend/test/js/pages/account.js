@@ -3,7 +3,24 @@ function escapeHTML(value){return String(value??'').replace(/[&<>\"']/g,c=>({'&'
 function getPlaybaseUser(){ try { return JSON.parse(localStorage.getItem('playbase-user') || 'null'); } catch(e){ return null; } }
 function getPlaybaseWishlist(){try{return JSON.parse(localStorage.getItem('playbase-wishlist')||'[]').map(String);}catch(e){return [];}}
 function setPlaybaseWishlist(ids){localStorage.setItem('playbase-wishlist',JSON.stringify([...new Set(ids.map(String))]));}
-function handleWishlistClick(event){const btn=event.target.closest('.wishlist-add');if(!btn)return;event.preventDefault();event.stopPropagation();if(!getPlaybaseUser()){localStorage.setItem('playbase-wishlist-intent',btn.dataset.wishlistId||'');location.hash='#/login';return;}const id=String(btn.dataset.wishlistId);const ids=getPlaybaseWishlist();if(ids.includes(id)){setPlaybaseWishlist(ids.filter(x=>x!==id));}else{setPlaybaseWishlist([...ids,id]);}const updated=getPlaybaseWishlist().includes(id);btn.classList.toggle('is-saved',updated);btn.setAttribute('aria-pressed',String(updated));btn.textContent=updated?'♥ In wishlist':'♡ Add to wishlist';const count=getPlaybaseWishlist().length;document.querySelectorAll('.panel-nav[data-panel="wishlist"] i').forEach(el=>el.textContent=count);document.querySelectorAll('.panel-stat-card').forEach(card=>{if(card.querySelector('span')?.textContent==='WISHLISTED GAMES'){const value=card.querySelector('b');if(value)value.textContent=count;}});if(!updated&&btn.closest('.wishlist-panel-grid')){btn.closest('.tile-wrap')?.remove();const grid=document.querySelector('.wishlist-panel-grid');if(grid&&!grid.querySelector('.tile-wrap')){grid.outerHTML=`<div class="panel-empty"><span>♡</span><h2>Your wishlist starts here</h2><p>Save games from the catalog to build a list of titles you want to play.</p><a class="account-submit inline-submit" href="#/browse">Browse games →</a></div>`;}}}
+function handleWishlistClick(event){
+ const btn=event.target.closest('.wishlist-add');if(!btn)return;
+ event.preventDefault();event.stopPropagation();
+ const id=String(btn.dataset.wishlistId||'');if(!id)return;
+ if(!getPlaybaseUser()){localStorage.setItem('playbase-wishlist-intent',id);location.hash='#/login';return;}
+ const ids=getPlaybaseWishlist();
+ if(ids.includes(id))setPlaybaseWishlist(ids.filter(x=>x!==id));else setPlaybaseWishlist([...ids,id]);
+ const updated=getPlaybaseWishlist().includes(id);
+ document.querySelectorAll(`.wishlist-add[data-wishlist-id="${CSS.escape(id)}"]`).forEach(el=>{
+   el.classList.toggle('is-saved',updated);el.setAttribute('aria-pressed',String(updated));
+   if(el.classList.contains('wishlist-heart')){el.textContent=updated?'♥':'♡';el.setAttribute('aria-label',updated?'Remove from wishlist':'Add to wishlist');el.title=updated?'Remove from wishlist':'Add to wishlist';}
+   else{el.textContent=updated?'♥ In wishlist':'♡ Add to wishlist';}
+ });
+ const count=getPlaybaseWishlist().length;
+ document.querySelectorAll('.panel-nav[data-panel="wishlist"] i').forEach(el=>el.textContent=count);
+ document.querySelectorAll('.panel-stat-card').forEach(card=>{if(card.querySelector('span')?.textContent==='WISHLISTED GAMES'){const value=card.querySelector('b');if(value)value.textContent=count;}});
+ if(!updated&&btn.closest('.wishlist-panel-grid')){btn.closest('.tile-wrap')?.remove();const grid=document.querySelector('.wishlist-panel-grid');if(grid&&!grid.querySelector('.tile-wrap')){grid.outerHTML=`<div class="panel-empty"><span>♡</span><h2>Your wishlist starts here</h2><p>Save games from the catalog to build a list of titles you want to play.</p><a class="account-submit inline-submit" href="#/browse">Browse games →</a></div>`;}}
+}
 document.addEventListener('click',handleWishlistClick);
 function syncAccountButton(){
   const user=getPlaybaseUser(), btn=document.getElementById('accountCta'), mobile=document.getElementById('mobileAccountLink');

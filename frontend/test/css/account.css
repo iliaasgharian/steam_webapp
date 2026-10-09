@@ -170,3 +170,16 @@
   .panel-page .panel-shell,.panel-sidebar,.panel-main,.panel-topbar,.panel-welcome,.panel-stat-card,.panel-lower-grid > *,
   .panel-page .panel-empty > span { animation:none !important; }
 }
+
+/* Wishlist controls now live on the game card or in game details, not underneath cards. */
+.tile-wrap{position:relative;display:block;min-width:0;align-self:stretch;}
+.tile-wrap>.tile{height:100%;min-width:0;}
+.tile-foot{padding-right:34px;}
+.wishlist-add{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text-dim);font:600 11px var(--font-body);cursor:pointer;transition:background .18s,border-color .18s,color .18s,transform .18s,box-shadow .18s;}
+.wishlist-add:hover{border-color:var(--good);color:var(--good);background:var(--good-wash);transform:translateY(-1px);}
+.wishlist-add.is-saved{background:var(--good-wash);border-color:rgba(15,163,122,.35);color:#087957;}
+.wishlist-add.wishlist-heart{position:absolute;right:10px;bottom:10px;z-index:8;width:32px;height:32px;min-height:32px;padding:0;margin:0;border-radius:50%;background:rgba(255,255,255,.96);border:1px solid rgba(210,215,225,.9);color:#667085;font:700 19px/1 Arial,sans-serif;box-shadow:0 3px 10px rgba(25,35,55,.14);}
+.wishlist-add.wishlist-heart:hover{transform:scale(1.08);border-color:#e63950;color:#e63950;background:#fff;}
+.wishlist-add.wishlist-heart.is-saved{color:#e63950;background:#fff0f2;border-color:#f3a2ae;}
+.detail-wishlist{margin:2px 0 16px;}
+@media(max-width:680px){.wishlist-add.wishlist-heart{right:8px;bottom:8px;width:30px;height:30px;min-height:30px}.detail-wishlist{width:100%;}}
