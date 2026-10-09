@@ -20,25 +20,5 @@
 .tag-filter-dropdown summary{gap:8px!important}.tag-filter-dropdown .tag-filter-selected{font:600 10px var(--font-mono);color:var(--good);background:rgba(15,163,122,.08);border:1px solid rgba(15,163,122,.18);padding:4px 7px;border-radius:999px;margin-left:auto}.tag-filter-chevron{color:var(--text-faint);transition:transform .2s}.tag-filter-dropdown[open] .tag-filter-chevron{transform:rotate(180deg)}.tag-filter-tools{display:grid;grid-template-columns:1fr auto;gap:7px;margin:11px 0 8px}.tag-filter-search{display:flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:0 9px}.tag-filter-search:focus-within{border-color:rgba(15,163,122,.45);box-shadow:0 0 0 3px rgba(15,163,122,.06)}.tag-filter-search span{color:var(--text-faint);font-size:15px}.tag-filter-search input{width:100%;background:transparent;border:0;outline:0;color:var(--text);padding:9px 0;font:12px var(--font-body)}.tag-filter-search input::placeholder{color:var(--text-faint)}.tag-mini-clear{border:1px solid var(--border);background:var(--surface-2);color:var(--text-faint);border-radius:9px;padding:0 9px;font:600 10px var(--font-body);cursor:pointer}.tag-mini-clear:hover{color:var(--text);border-color:var(--text-faint)}.selected-tags-preview{display:flex;flex-wrap:wrap;gap:5px;min-height:25px;margin-bottom:7px}.selected-tags-empty{font-size:10px;color:var(--text-faint);padding:4px 0}.selected-tag-chip{display:inline-flex;align-items:center;gap:3px}.selected-tag-chip .tag-chip{font-size:9px;padding:4px 7px}.selected-tag-chip button{width:18px;height:18px;border:0;border-radius:50%;background:var(--surface-2);color:var(--text-faint);cursor:pointer;line-height:1}.selected-tag-chip button:hover{color:var(--text);background:var(--raised)}.tag-filter-list{max-height:250px;overflow:auto;padding-right:4px}.tag-check-row{display:flex!important;align-items:center;justify-content:space-between;padding:6px 2px!important;border-radius:7px}.tag-check-row:hover{background:rgba(20,24,40,.025)}.tag-check-label{display:flex;align-items:center;gap:8px;min-width:0}.tag-check-label>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tag-option-icon{width:25px;height:25px;display:grid;place-items:center;border-radius:7px;font-size:12px;flex:none}.tag-check-row input{cursor:pointer;accent-color:var(--good)}@media(max-width:600px){.tag-filter-tools{grid-template-columns:1fr auto}.tag-filter-list{max-height:220px}}
 .compact-tag-grid{max-height:240px}.tag-option-box{padding:8px}.tag-filter-selected{font-size:9px}}
 
-/* Keep the floating game details above neighbouring cards. */
-#browseGrid,
-.grid {
-  position: relative;
-  overflow: visible !important;
-  isolation: auto !important;
-}
-#browseGrid > .game-tile,
-.grid > .game-tile {
-  position: relative !important;
-  z-index: 0;
-  isolation: auto !important;
-  overflow: visible !important;
-}
-#browseGrid > .game-tile:hover,
-.grid > .game-tile:hover {
-  z-index: 999 !important;
-}
-#browseGrid .game-tile .tile-hover-panel,
-.grid .game-tile .tile-hover-panel {
-  z-index: 1000 !important;
-}
+/* Keep the floating game details above neighbouring cards.
+   The lift happens on .tile-wrap (see account.css), since each wrapper is an isolated stacking context. */

@@ -198,3 +198,9 @@
 .tile-wrap:focus-within>.wishlist-add.wishlist-heart{z-index:1001!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;}
 .tile-wrap>.tile.game-tile{position:relative;z-index:1;}
 .tile-wrap>.tile.game-tile:hover{z-index:2;}
+
+/* Fix: hover details panel was hidden under the next card.
+   Each .tile-wrap is its own stacking context (isolation:isolate), so the
+   hovered wrapper itself must be lifted above its siblings. */
+.tile-wrap:hover,
+.tile-wrap:focus-within{z-index:60;}
