@@ -13,7 +13,7 @@ function handleWishlistClick(event){
  const updated=getPlaybaseWishlist().includes(id);
  document.querySelectorAll(`.wishlist-add[data-wishlist-id="${CSS.escape(id)}"]`).forEach(el=>{
    el.classList.toggle('is-saved',updated);el.setAttribute('aria-pressed',String(updated));
-   if(el.classList.contains('wishlist-heart')){el.textContent=updated?'♥':'♡';el.setAttribute('aria-label',updated?'Remove from wishlist':'Add to wishlist');el.title=updated?'Remove from wishlist':'Add to wishlist';}
+   if(el.classList.contains('wishlist-heart')){el.setAttribute('aria-label',updated?'Remove from wishlist':'Add to wishlist');el.title=updated?'Remove from wishlist':'Add to wishlist';}
    else{el.textContent=updated?'♥ In wishlist':'♡ Add to wishlist';}
  });
  const count=getPlaybaseWishlist().length;

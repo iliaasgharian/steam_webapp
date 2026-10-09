@@ -184,9 +184,8 @@
 .detail-wishlist{margin:2px 0 16px;}
 @media(max-width:680px){.wishlist-add.wishlist-heart{right:8px;bottom:8px;width:30px;height:30px;min-height:30px}.detail-wishlist{width:100%;}}
 
-
-/* Keep the wishlist heart visible and clickable while the game hover preview is open. */
-.tile-wrap{position:relative;isolation:isolate;}
-.tile-wrap:hover{z-index:60;}
-.tile-wrap>.wishlist-heart{position:absolute!important;right:10px!important;bottom:10px!important;z-index:100!important;display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;}
-.tile-wrap>.tile:hover+.wishlist-heart,.tile-wrap:hover>.wishlist-heart{visibility:visible!important;opacity:1!important;}
+/* Keep the wishlist heart silhouette identical before and after saving. */
+.wishlist-add.wishlist-heart{font-size:0;line-height:0;display:flex;align-items:center;justify-content:center;color:#667085;}
+.wishlist-heart-icon{display:block;width:17px;height:17px;fill:transparent;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:fill .16s ease,color .16s ease,transform .16s ease;}
+.wishlist-add.wishlist-heart:hover .wishlist-heart-icon{transform:scale(1.04);}
+.wishlist-add.wishlist-heart.is-saved .wishlist-heart-icon{fill:currentColor;stroke:currentColor;}
