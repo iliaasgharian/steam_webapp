@@ -49,3 +49,7 @@ If an image is missing, the old colored gradient shows behind it.
 - **Change colors:** edit `css/variables.css`. Some gradients and overrides in `hybrid.css` and `light-theme.css` use their own values.
 
 - **Filters:** the left filter sidebar lives only in `js/pages/catalog.js`. `browse.js` and `collections.js` just pass it their data and labels, so a change there applies to every page.
+
+## Game Mixer
+
+`js/pages/mixer.js` blends two games from their tags/genres: a concept name + pitch, shared / unique DNA tags, and the 3 closest existing games (games that share tags with BOTH picks rank first). It runs in the browser on the sample data. Later, replace `mixGames()` with a call to the backend (`POST /api/mix`: pgvector similarity + LLM text); the UI stays the same. Styles: `css/mixer.css`.
