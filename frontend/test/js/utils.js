@@ -55,18 +55,80 @@ function sparkline(seed,color,w=120,h=32){
   const d=pts.map((p,i)=>(i===0?"M":"L")+(i*step).toFixed(1)+","+(h-(p/100*h)).toFixed(1)).join(" ");
   return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
-function lineChart(seedOffset=0){
-  const w=460,h=170,pad=8; let v=60,pts=[];
-  for(let i=0;i<30;i++){ v+=Math.sin((i+seedOffset)*0.4)*3+(Math.random()-0.42)*6; v=Math.max(15,Math.min(95,v)); pts.push(v); }
-  const first=Math.round(pts[0]*100),last=Math.round(pts[pts.length-1]*100),delta=last-first;
-  const positive=delta>=0,emoji=positive?'📈':'📉',label=positive?'Trending up':'Trending down';
-  const step=(w-pad*2)/(pts.length-1);
-  const path=pts.map((p,i)=>(i===0?"M":"L")+(pad+i*step).toFixed(1)+","+(h-pad-(p/100*(h-pad*2))).toFixed(1)).join(" ");
-  const area=path+` L${(pad+(pts.length-1)*step).toFixed(1)},${h-pad} L${pad},${h-pad} Z`;
-  return `<div class="chart-value-row"><span class="chart-value">${last.toLocaleString()}</span><span class="chart-trend" style="${positive?'':'background:rgba(229,56,79,.1);color:var(--bad);border-color:rgba(229,56,79,.22)'}">${emoji} ${label} · ${delta>=0?'+':''}${delta}</span></div><div style="position:relative"><svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><defs><linearGradient id="lg${seedOffset}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6F4FF0" stop-opacity="0.35"/><stop offset="100%" stop-color="#6F4FF0" stop-opacity="0"/></linearGradient></defs><path d="${area}" fill="url(#lg${seedOffset})" stroke="none"/><path d="${path}" fill="none" stroke="#6F4FF0" stroke-width="2"/><text x="12" y="17" fill="#8890A0" font-size="10">100</text><text x="12" y="88" fill="#8890A0" font-size="10">50</text><text x="12" y="164" fill="#8890A0" font-size="10">0</text></svg></div>`;
+/* ---------- Charts ----------
+   Every number on a chart is computed from the same points that are drawn, so the line, the axis and
+   the headline value always agree. Points are generated deterministically from a seed (game id), so a
+   chart looks the same every time the page is opened. Replace makeSeries() with real API data later. */
+function seededRandom(seed){
+  let h=2166136261; for(const c of String(seed)){ h^=c.charCodeAt(0); h=Math.imul(h,16777619); }
+  let a=h>>>0;
+  return ()=>{ a=(a+0x6D2B79F5)|0; let t=Math.imul(a^(a>>>15),1|a); t=(t+Math.imul(t^(t>>>7),61|t))^t; return ((t^(t>>>14))>>>0)/4294967296; };
 }
-function barChart(){
-  const data=[{l:"Positive",v:82,c:"var(--good)"},{l:"Mixed",v:12,c:"var(--gold)"},{l:"Negative",v:6,c:"var(--bad)"}];
+function compactNum(n){
+  const a=Math.abs(n);
+  if(a>=1e6) return (n/1e6).toFixed(a>=1e7?0:2).replace(/\.?0+$/,'')+'M';
+  if(a>=1e4) return (n/1e3).toFixed(0)+'K';
+  if(a>=1e3) return (n/1e3).toFixed(1).replace(/\.0$/,'')+'K';
+  return String(Math.round(n));
+}
+function niceCeil(v){
+  if(v<=0) return 1;
+  const p=Math.pow(10,Math.floor(Math.log10(v))), m=v/p;
+  const step=[1,1.5,2,2.5,3,4,5,6,8,10].find(x=>m<=x+1e-9);
+  return step*p;
+}
+function makeSeries({seed,kind,end=0,peak,points,delta=0,reviewCount=0}){
+  const rnd=seededRandom(seed), clamp=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));
+  if(kind==='day'){                       // 24 hourly points, last point = current value, highest point = 24h peak
+    const n=points||24, phase=rnd()*Math.PI*2; let v=[];
+    for(let i=0;i<n;i++) v.push(0.72+0.28*Math.sin((i/n)*Math.PI*2+phase)+(rnd()-.5)*.06);
+    const top=Math.max(...v.slice(0,n-1)), pk=peak||end*1.35;
+    v=v.map(x=>Math.max(0,x/top*pk)); v[n-1]=end;
+    return v.map(x=>Math.round(x));
+  }
+  if(kind==='velocity'){                  // new reviews per day
+    const n=points||30, base=Math.max(2,reviewCount/180); let v=[];
+    for(let i=0;i<n;i++) v.push(Math.max(0,Math.round(base*(1+.25*Math.sin(i*2*Math.PI/7+1)+(rnd()-.5)*.5))));
+    return v;
+  }
+  const n=points||30, drift=clamp(delta/100*2,-.3,.35); let r=[1-drift], phase=rnd()*6;   // "month": 30 daily points
+  for(let i=1;i<n;i++) r.push(r[i-1]+drift/(n-1)+(rnd()-.5)*.045+(1-r[i-1])*.05+Math.sin(i*2*Math.PI/7+phase)*.008);
+  const last=r[n-1];
+  return r.map(x=>Math.max(0,Math.round(end*x/last)));
+}
+function lineChart(opts={}){
+  const {kind='month',unit='players',summary='last',caption=''}=opts;
+  const vals=makeSeries(opts), n=vals.length;
+  const labelAt=i=>{ const back=n-1-i; return kind==='day'?(back?back+'h ago':'Now'):(back?back+'d ago':'Today'); };
+  const axisX=kind==='day'?['24h ago','12h ago','Now']:[`${n-1}d ago`,`${Math.round((n-1)/2)}d ago`,'Today'];
+  const max=Math.max(...vals);
+  if(!max) return `<div class="lc-empty">No ${unit} data yet.</div>`;
+  const top=niceCeil(max*1.05);
+  const headline=summary==='sum'?vals.reduce((a,b)=>a+b,0):vals[n-1];
+  const ref=summary==='sum'?vals.slice(0,7).reduce((a,b)=>a+b,0):vals[0], cur=summary==='sum'?vals.slice(-7).reduce((a,b)=>a+b,0):vals[n-1];
+  const pct=ref?Math.round((cur-ref)/ref*100):0, up=pct>=0;
+  const trendTxt=`${up?'📈 Trending up':'📉 Trending down'} · ${up?'+':''}${pct}%`;
+  const X=i=>(i/(n-1)*100).toFixed(2), Y=v=>(100-v/top*100).toFixed(2);
+  const path=vals.map((v,i)=>(i?'L':'M')+X(i)+','+Y(v)).join(' ');
+  const gid='lg'+Math.random().toString(36).slice(2,8);
+  const pts=vals.map((v,i)=>[labelAt(i),v,+Y(v)]);
+  return `<div class="lc" data-unit="${unit}" data-pts='${JSON.stringify(pts)}'>
+    <div class="chart-value-row"><span class="chart-value-wrap"><span class="chart-value">${headline.toLocaleString()}</span><small class="chart-value-cap">${caption}</small></span><span class="chart-trend" style="${up?'':'background:rgba(229,56,79,.1);color:var(--bad);border-color:rgba(229,56,79,.22)'}">${trendTxt}</span></div>
+    <div class="lc-body"><div class="lc-y"><span>${compactNum(top)}</span><span>${compactNum(top/2)}</span><span>0</span></div>
+      <div class="lc-plot"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6F4FF0" stop-opacity=".30"/><stop offset="100%" stop-color="#6F4FF0" stop-opacity="0"/></linearGradient></defs>
+        <line x1="0" y1="0" x2="100" y2="0" class="lc-grid"/><line x1="0" y1="50" x2="100" y2="50" class="lc-grid"/><line x1="0" y1="100" x2="100" y2="100" class="lc-grid"/>
+        <path d="${path} L100,100 L0,100 Z" fill="url(#${gid})"/><path d="${path}" fill="none" stroke="#6F4FF0" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        <div class="lc-cursor"></div><div class="lc-dot"></div><div class="lc-tip"></div></div></div>
+    <div class="lc-x">${axisX.map(x=>`<span>${x}</span>`).join('')}</div></div>`;
+}
+// Review split. Pass the game's positive-review % (g.reviews); with no argument it is weighted across the whole catalog.
+function barChart(positive){
+  if(positive==null){
+    const tot=GAMES.reduce((a,g)=>a+(g.reviewCount||0),0);
+    positive=tot?GAMES.reduce((a,g)=>a+(g.reviews||0)*(g.reviewCount||0),0)/tot:0;
+  }
+  const pos=Math.round(Math.max(0,Math.min(100,positive))), rest=100-pos, mixed=Math.round(rest*.65), neg=rest-mixed;
+  const data=[{l:"Positive",v:pos,c:"var(--good)"},{l:"Mixed",v:mixed,c:"var(--gold)"},{l:"Negative",v:neg,c:"var(--bad)"}];
   return `<div style="display:flex;flex-direction:column;gap:14px;padding-top:6px">
     ${data.map(d=>`<div>
       <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
