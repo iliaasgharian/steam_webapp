@@ -77,9 +77,12 @@ function renderMixerPicker(slot){
 }
 
 /* ---- Mixer page ---- */
-function renderMixer(){
-  // restore a pair that was waiting for login
-  try{ const p = JSON.parse(localStorage.getItem('playbase-mix-pending') || 'null'); if(p && localStorage.getItem('playbase-user')){ mixPicks = { a: p.a, b: p.b }; mixSave(); localStorage.removeItem('playbase-mix-pending'); localStorage.removeItem('playbase-mix-intent'); } }catch(e){}
+function renderMixer(animate = true){
+  // `animate` is false when the page re-renders itself (Clear / Surprise me): no fade-in, so nothing is left hidden.
+  const rv = animate === false ? '' : ' reveal';
+  let mixed = false;   // the blend only appears after the person presses the Mix button
+  // restore a pair that was waiting for login (it was already mixed, so show the result again)
+  try{ const p = JSON.parse(localStorage.getItem('playbase-mix-pending') || 'null'); if(p && localStorage.getItem('playbase-user')){ mixPicks = { a: p.a, b: p.b }; mixSave(); localStorage.removeItem('playbase-mix-pending'); localStorage.removeItem('playbase-mix-intent'); mixed = true; } }catch(e){}
   ['a','b'].forEach(k => { if(!mixById(mixPicks[k])) delete mixPicks[k]; });
   let variant = 0, last = null;
   const cover = g => `style="background:url(${gameImg(g)}) center/cover no-repeat, linear-gradient(135deg, ${gc(g.genres[0])}, ${gc(g.genres[0])}55)"`;
@@ -90,14 +93,14 @@ function renderMixer(){
   const both = mixPicks.a && mixPicks.b;
 
   view.innerHTML = `
-    <div class="page page-hero reveal">
+    <div class="page page-hero${rv}">
       <span class="k">EXPERIMENTAL</span><h1>Game Mixer</h1>
       <p>Pick two games you love, and Playbase blends them into a new concept — then shows the closest games that already exist.</p>
     </div>
-    <div class="page section-tight reveal">
+    <div class="page section-tight${rv}">
       <div class="mx-stage">${slotHTML('a','First')}<div class="mx-op">+</div>${slotHTML('b','Second')}</div>
       <div class="mx-actions">
-        <button class="btn-primary" id="mxAgain" type="button" ${both ? '' : 'disabled'}>✣ Mix again</button>
+        <button class="btn-primary" id="mxMix" type="button" ${both ? '' : 'disabled'}>✣ Mix</button>
         <button class="btn-ghost" id="mxShuffle" type="button">🎲 Surprise me</button>
         <button class="btn-ghost" id="mxReset" type="button" ${(mixPicks.a || mixPicks.b) ? '' : 'hidden'}>Clear</button>
       </div>
@@ -107,7 +110,10 @@ function renderMixer(){
   const chips = (arr, cls) => arr.slice(0, 6).map(t => `<span class="mx-chip ${cls}">${t}</span>`).join('');
   function update(){
     const out = document.getElementById('mxResult');
+    const mixBtn = document.getElementById('mxMix');
     if(!both){ last = null; out.innerHTML = `<p class="mx-note">${mixPicks.a || mixPicks.b ? `Now choose the ${mixPicks.a ? 'second' : 'first'} game.` : 'Choose two games to see the mix.'}</p>`; return; }
+    if(!mixed){ last = null; mixBtn.textContent = '✣ Mix'; out.innerHTML = `<p class="mx-note">Both games are ready — press <b>Mix</b> to blend them.</p>`; return; }
+    mixBtn.textContent = '✣ Mix again';
     const A = mixById(mixPicks.a), B = mixById(mixPicks.b);
     const r = last = mixGames(A, B, variant);
     out.innerHTML = `
@@ -142,11 +148,12 @@ function renderMixer(){
     localStorage.setItem('playbase-mixes', JSON.stringify(mixes));
     fb.textContent = 'Mix saved to your account history.'; btn.textContent = '✓ Saved to account'; btn.classList.add('is-saved');
   }
-  document.getElementById('mxAgain').onclick = () => { variant++; update(); };
+  document.getElementById('mxMix').onclick = () => { if(!both) return; if(mixed) variant++; mixed = true; update(); };
   document.getElementById('mxShuffle').onclick = () => {
     const ids = MIX_POOL.map(g => g.id); const x = ids[Math.floor(Math.random() * ids.length)];
-    const rest = ids.filter(i => i !== x); mixPicks = { a: x, b: rest[Math.floor(Math.random() * rest.length)] }; mixSave(); renderMixer();
+    const rest = ids.filter(i => i !== x); mixPicks = { a: x, b: rest[Math.floor(Math.random() * rest.length)] }; mixSave(); renderMixer(false);
   };
-  document.getElementById('mxReset').onclick = () => { mixPicks = {}; mixSave(); renderMixer(); };
+  document.getElementById('mxReset').onclick = () => { mixPicks = {}; mixSave(); renderMixer(false); };
   update();
+  if (typeof armReveals === 'function') armReveals();
 }
