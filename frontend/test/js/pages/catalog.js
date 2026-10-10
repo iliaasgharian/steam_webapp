@@ -83,10 +83,21 @@ function renderCatalog(opts){
   const features=[...view.querySelectorAll('.browse-feature')];
   const tags=[...view.querySelectorAll('.browse-tag')];
   const platformBtns=[...view.querySelectorAll('.plat-btn')];
-  let applied={genres:[],features:[],tags:[],from:'',to:'',rating:0,platform:'Win'};
+  const developers=[...view.querySelectorAll('.browse-developer')];
+  const publishers=[...view.querySelectorAll('.browse-publisher')];
+  // A selected studio/publisher from its directory is carried into All Games.
+  const directoryFilter=localStorage.getItem('playbase-directory-filter');
+  if(title==='Browse all games' && directoryFilter){
+    try { const saved=JSON.parse(directoryFilter);
+      if(saved.type==='developer') developers.forEach(x=>x.checked=x.value===saved.value);
+      if(saved.type==='publisher') publishers.forEach(x=>x.checked=x.value===saved.value);
+    } catch(e) {}
+    localStorage.removeItem('playbase-directory-filter');
+  }
+  let applied={genres:[],features:[],tags:[],developers:developers.filter(x=>x.checked).map(x=>x.value),publishers:publishers.filter(x=>x.checked).map(x=>x.value),from:'',to:'',rating:0,platform:'Win'};
 
   function pendingState(){
-    const pending={genres:genres.filter(x=>x.checked).map(x=>x.value),features:features.filter(x=>x.checked).map(x=>x.value),tags:tags.filter(x=>x.checked).map(x=>x.value),from:from.value,to:to.value,rating:+ratingRange.value,platform:(platformBtns.find(x=>x.classList.contains('on'))||{}).dataset?.platform||'Win'};
+    const pending={genres:genres.filter(x=>x.checked).map(x=>x.value),features:features.filter(x=>x.checked).map(x=>x.value),tags:tags.filter(x=>x.checked).map(x=>x.value),developers:developers.filter(x=>x.checked).map(x=>x.value),publishers:publishers.filter(x=>x.checked).map(x=>x.value),from:from.value,to:to.value,rating:+ratingRange.value,platform:(platformBtns.find(x=>x.classList.contains('on'))||{}).dataset?.platform||'Win'};
     const changed=JSON.stringify(pending)!==JSON.stringify(applied);
     pendingDot.classList.toggle('show',changed);
   }
@@ -98,7 +109,9 @@ function renderCatalog(opts){
       const featureOK=!state.features.length || state.features.every(x=>gameFeatures.includes(x));
       const tagOK=!state.tags.length || state.tags.every(x=>gameTags.includes(x));
       const platformOK=state.platform==='Win';
-      return genreOK&&featureOK&&tagOK&&(!state.from||date>=state.from)&&(!state.to||date<=state.to)&&(g.reviews||0)>=state.rating&&platformOK;
+      const developerOK=!state.developers.length||state.developers.includes(g.developer);
+      const publisherOK=!state.publishers.length||state.publishers.includes(g.publisher);
+      return genreOK&&featureOK&&tagOK&&developerOK&&publisherOK&&(!state.from||date>=state.from)&&(!state.to||date<=state.to)&&(g.reviews||0)>=state.rating&&platformOK;
     });
     if(sort.value==='discount') list=[...list].sort((a,b)=>(b.discount||0)-(a.discount||0));
     if(sort.value==='price') list=[...list].sort((a,b)=>(a.price||0)-(b.price||0));
@@ -113,23 +126,26 @@ function renderCatalog(opts){
     resultCount.textContent=totalText(list.length);
     grid.innerHTML=list.length?list.map(gameTile).join(''):`<div class="collection-empty">No games match these filters.</div>`;
     const chips=[];
-    applied.genres.forEach(x=>chips.push(x)); applied.features.forEach(x=>chips.push(x)); applied.tags.forEach(x=>chips.push(x));
+    applied.genres.forEach(x=>chips.push(x)); applied.features.forEach(x=>chips.push(x)); applied.tags.forEach(x=>chips.push(x)); applied.developers.forEach(x=>chips.push(x)); applied.publishers.forEach(x=>chips.push(x));
     if(applied.from)chips.push(`From ${applied.from}`); if(applied.to)chips.push(`To ${applied.to}`); if(applied.rating)chips.push(`Rating ≥ ${applied.rating}%`);
     summary.innerHTML=chips.length?chips.map(x=>`<span>${x}</span>`).join(''):`<span>All games</span>`;
     armReveals();
   }
   function apply(){
-    applied={genres:genres.filter(x=>x.checked).map(x=>x.value),features:features.filter(x=>x.checked).map(x=>x.value),tags:tags.filter(x=>x.checked).map(x=>x.value),from:from.value,to:to.value,rating:+ratingRange.value,platform:(platformBtns.find(x=>x.classList.contains('on'))||{}).dataset?.platform||'Win'};
+    applied={genres:genres.filter(x=>x.checked).map(x=>x.value),features:features.filter(x=>x.checked).map(x=>x.value),tags:tags.filter(x=>x.checked).map(x=>x.value),developers:developers.filter(x=>x.checked).map(x=>x.value),publishers:publishers.filter(x=>x.checked).map(x=>x.value),from:from.value,to:to.value,rating:+ratingRange.value,platform:(platformBtns.find(x=>x.classList.contains('on'))||{}).dataset?.platform||'Win'};
     renderResults(); pendingState();
+    window.scrollTo({top:0, behavior:'smooth'});
   }
   genres.forEach(x=>x.addEventListener('change',pendingState));
   features.forEach(x=>x.addEventListener('change',pendingState));
   tags.forEach(x=>x.addEventListener('change',pendingState));
+  developers.forEach(x=>x.addEventListener('change',pendingState));
+  publishers.forEach(x=>x.addEventListener('change',pendingState));
   from.addEventListener('change',pendingState); to.addEventListener('change',pendingState);
   ratingRange.addEventListener('input',()=>{ratingValue.textContent=ratingRange.value;pendingState();});
   platformBtns.forEach(btn=>btn.addEventListener('click',()=>{platformBtns.forEach(x=>x.classList.remove('on'));btn.classList.add('on');pendingState();}));
   document.getElementById('applyBrowseFilters').addEventListener('click',apply);
-  document.getElementById('clearBrowseFilters').addEventListener('click',()=>{genres.forEach(x=>x.checked=false);features.forEach(x=>x.checked=false);tags.forEach(x=>x.checked=false);from.value='';to.value='';ratingRange.value=0;ratingValue.textContent='0';platformBtns.forEach(x=>x.classList.toggle('on',x.dataset.platform==='Win'));apply();});
+  document.getElementById('clearBrowseFilters').addEventListener('click',()=>{genres.forEach(x=>x.checked=false);features.forEach(x=>x.checked=false);tags.forEach(x=>x.checked=false);developers.forEach(x=>x.checked=false);publishers.forEach(x=>x.checked=false);from.value='';to.value='';ratingRange.value=0;ratingValue.textContent='0';platformBtns.forEach(x=>x.classList.toggle('on',x.dataset.platform==='Win'));apply();});
   sort.addEventListener('change',renderResults);
   renderResults();
   pendingState();

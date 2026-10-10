@@ -15,6 +15,7 @@ function regionalPriceHTML(g){
 
 function renderDetail(id){
   const g=GAMES.find(x=>x.id===id)||FEATURED, similar=GAMES.filter(x=>x.id!==g.id).slice(0,4), c1=gc(g.genres[0]);
+  try { const recent=JSON.parse(localStorage.getItem('playbase-recent-games')||'[]').filter(x=>String(x)!==String(g.id)); recent.unshift(String(g.id)); localStorage.setItem('playbase-recent-games',JSON.stringify(recent.slice(0,12))); } catch(e) {}
   const current=money(g.price*(1-g.discount/100));
   const regional=regionalPriceHTML(g);
   view.innerHTML=`<div class="page">
