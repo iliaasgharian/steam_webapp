@@ -6,6 +6,11 @@
 const MIX_POOL = (() => { const seen = new Set(); return [...GAMES, ...FREE_GAMES, ...UPCOMING].filter(g => !seen.has(g.id) && seen.add(g.id)); })();
 const MIX_SKIP_TRAITS = /singleplayer|multiplayer|controller|achievements|steam deck/i;
 
+// Selected games survive going to the picker page and back.
+let mixPicks = (() => { try{ return JSON.parse(sessionStorage.getItem('playbase-mix-picks') || '{}') }catch(e){ return {} } })();
+const mixSave = () => { try{ sessionStorage.setItem('playbase-mix-picks', JSON.stringify(mixPicks)) }catch(e){} };
+const mixById = id => MIX_POOL.find(g => g.id === id);
+
 function mixTags(g){ return tagsForGame(g); }
 function mixTraits(g, other){            // "flavor" tags: not a genre, not a feature, not shared with the other game
   const t = mixTags(g).filter(x => !(g.genres||[]).includes(x) && !MIX_SKIP_TRAITS.test(x) && !other.includes(x));
@@ -42,11 +47,47 @@ function mixGames(A, B, variant = 0){
   return { name: mixName(A.name, B.name, variant), pitch: pitches[variant % 3], shared, onlyA, onlyB, similar, hasBoth: similar.some(s => s.both) };
 }
 
+// Minimal tile for the picker: image + name only (no link to the game, no hover panel, no wishlist).
+function mixPickTile(g, current){
+  const art = `url(${gameImg(g)}) center/cover no-repeat, linear-gradient(135deg, ${gc(g.genres[0])}, ${gc(g.genres[0])}55)`;
+  return `<a class="mix-pick-tile${current ? ' is-current' : ''}" href="#/mixer" data-pick-id="${g.id}"><div class="mix-pick-art" style="background:${art}"></div><div class="mix-pick-name">${g.name}</div></a>`;
+}
+
+/* ---- Picker page: #/mixer/pick/a  or  #/mixer/pick/b  — same filters as "All games" ---- */
+function renderMixerPicker(slot){
+  if (slot !== 'a' && slot !== 'b'){ location.hash = '#/mixer'; return; }
+  const otherG = mixById(mixPicks[slot === 'a' ? 'b' : 'a']);
+  const data = MIX_POOL.filter(g => !otherG || g.id !== otherG.id);
+  renderCatalog({
+    data, tile: g => mixPickTile(g, mixPicks[slot] === g.id),
+    kicker: `GAME MIXER · STEP ${slot === 'a' ? 1 : 2} OF 2`,
+    title: slot === 'a' ? 'Choose the first game' : 'Choose the second game',
+    desc: otherG ? `Pick a game to blend with ${otherG.name}. Use the filters to narrow the list.` : 'Click a game to add it to the mixer. Use the filters to narrow the list.',
+    genres: [...new Set(data.flatMap(g => g.genres || []))],
+    genreCount: gn => data.filter(x => (x.genres || []).includes(gn)).length,
+    sorts: [['relevance','Sort: Relevance'],['players','Sort: Players online'],['score','Sort: Review score'],['date-new','Sort: Release date (newest)']],
+    totalText: n => `${n} of ${data.length} games`
+  });
+  const hero = view.querySelector('.page-hero');
+  if (hero) hero.insertAdjacentHTML('afterbegin', '<a class="mx-back" href="#/mixer">← Back to Game Mixer</a>');
+  document.getElementById('browseGrid').addEventListener('click', e => {
+    const a = e.target.closest('[data-pick-id]'); if (!a) return;
+    e.preventDefault(); mixPicks[slot] = a.dataset.pickId; mixSave(); location.hash = '#/mixer';
+  });
+}
+
+/* ---- Mixer page ---- */
 function renderMixer(){
-  const opts = sel => MIX_POOL.map(g => `<option value="${g.id}" ${g.id===sel?'selected':''}>${g.name}</option>`).join('');
-  let a = GAMES[4].id, b = GAMES[2].id, variant = 0, last = null;
-  // restore a pick that was waiting for login
-  try{ const p = JSON.parse(localStorage.getItem('playbase-mix-pending')||'null'); if(p && localStorage.getItem('playbase-user')){ a = p.a; b = p.b; localStorage.removeItem('playbase-mix-pending'); localStorage.removeItem('playbase-mix-intent'); } }catch(e){}
+  // restore a pair that was waiting for login
+  try{ const p = JSON.parse(localStorage.getItem('playbase-mix-pending') || 'null'); if(p && localStorage.getItem('playbase-user')){ mixPicks = { a: p.a, b: p.b }; mixSave(); localStorage.removeItem('playbase-mix-pending'); localStorage.removeItem('playbase-mix-intent'); } }catch(e){}
+  ['a','b'].forEach(k => { if(!mixById(mixPicks[k])) delete mixPicks[k]; });
+  let variant = 0, last = null;
+  const cover = g => `style="background:url(${gameImg(g)}) center/cover no-repeat, linear-gradient(135deg, ${gc(g.genres[0])}, ${gc(g.genres[0])}55)"`;
+  const slotHTML = (k, label) => { const g = mixById(mixPicks[k]);
+    return `<a class="mx-slot ${g ? 'filled' : 'empty'}" href="#/mixer/pick/${k}" aria-label="${g ? 'Change' : 'Choose'} the ${label} game">
+      <div class="mx-cover" ${g ? cover(g) : ''}>${g ? '' : '<span class="mx-plus">+</span>'}</div>
+      <span class="mx-label">${label} game</span><b class="mx-name">${g ? g.name : 'Choose a game'}</b><span class="mx-change">${g ? 'Change' : 'Browse all games →'}</span></a>`; };
+  const both = mixPicks.a && mixPicks.b;
 
   view.innerHTML = `
     <div class="page page-hero reveal">
@@ -54,27 +95,20 @@ function renderMixer(){
       <p>Pick two games you love, and Playbase blends them into a new concept — then shows the closest games that already exist.</p>
     </div>
     <div class="page section-tight reveal">
-      <div class="mx-stage">
-        <div class="mx-slot"><div class="mx-cover" id="mxCoverA"></div><label for="mxSelA">First game</label><select id="mxSelA">${opts(a)}</select></div>
-        <div class="mx-op">+</div>
-        <div class="mx-slot"><div class="mx-cover" id="mxCoverB"></div><label for="mxSelB">Second game</label><select id="mxSelB">${opts(b)}</select></div>
-      </div>
+      <div class="mx-stage">${slotHTML('a','First')}<div class="mx-op">+</div>${slotHTML('b','Second')}</div>
       <div class="mx-actions">
-        <button class="btn-primary" id="mxAgain" type="button">✣ Mix again</button>
+        <button class="btn-primary" id="mxAgain" type="button" ${both ? '' : 'disabled'}>✣ Mix again</button>
         <button class="btn-ghost" id="mxShuffle" type="button">🎲 Surprise me</button>
+        <button class="btn-ghost" id="mxReset" type="button" ${(mixPicks.a || mixPicks.b) ? '' : 'hidden'}>Clear</button>
       </div>
       <div id="mxResult" aria-live="polite"></div>
     </div>`;
 
-  const byId = id => MIX_POOL.find(g => g.id === id);
-  const cover = (el, g) => { el.style.background = `url(${gameImg(g)}) center/cover no-repeat, linear-gradient(135deg, ${gc(g.genres[0])}, ${gc(g.genres[0])}55)`; };
   const chips = (arr, cls) => arr.slice(0, 6).map(t => `<span class="mx-chip ${cls}">${t}</span>`).join('');
-
   function update(){
-    a = document.getElementById('mxSelA').value; b = document.getElementById('mxSelB').value;
-    const A = byId(a), B = byId(b), out = document.getElementById('mxResult');
-    cover(document.getElementById('mxCoverA'), A); cover(document.getElementById('mxCoverB'), B);
-    if(a === b){ last = null; out.innerHTML = `<p class="mx-note">Pick two different games to mix.</p>`; return; }
+    const out = document.getElementById('mxResult');
+    if(!both){ last = null; out.innerHTML = `<p class="mx-note">${mixPicks.a || mixPicks.b ? `Now choose the ${mixPicks.a ? 'second' : 'first'} game.` : 'Choose two games to see the mix.'}</p>`; return; }
+    const A = mixById(mixPicks.a), B = mixById(mixPicks.b);
     const r = last = mixGames(A, B, variant);
     out.innerHTML = `
       <div class="mx-result">
@@ -98,23 +132,21 @@ function renderMixer(){
       <div class="grid mx-similar">${r.similar.map(s => `<div class="mx-match"><div class="mx-match-top"><span class="mx-pct">${s.pct}% match</span><span class="mx-why">${s.reasons.join(' · ')}</span></div>${gameTile(s.g)}</div>`).join('')}</div>`;
     document.getElementById('saveCompletedMix').onclick = saveMix;
   }
-
   function saveMix(){
     const btn = document.getElementById('saveCompletedMix'), fb = document.getElementById('mixerSaveFeedback');
-    let user = null; try{ user = JSON.parse(localStorage.getItem('playbase-user')||'null') }catch(e){}
-    if(!user){ localStorage.setItem('playbase-mix-intent','1'); localStorage.setItem('playbase-mix-pending', JSON.stringify({a, b})); location.hash = '#/login'; return; }
-    let mixes = []; try{ mixes = JSON.parse(localStorage.getItem('playbase-mixes')||'[]') }catch(e){}
-    const A = byId(a), B = byId(b);
+    let user = null; try{ user = JSON.parse(localStorage.getItem('playbase-user') || 'null') }catch(e){}
+    if(!user){ localStorage.setItem('playbase-mix-intent','1'); localStorage.setItem('playbase-mix-pending', JSON.stringify({ a: mixPicks.a, b: mixPicks.b })); location.hash = '#/login'; return; }
+    let mixes = []; try{ mixes = JSON.parse(localStorage.getItem('playbase-mixes') || '[]') }catch(e){}
+    const A = mixById(mixPicks.a), B = mixById(mixPicks.b);
     mixes.push({ id: String(Date.now()), gameA: A.name, gameB: B.name, title: `${A.name} × ${B.name}`, result: `${last.name} — ${last.pitch}`, createdAt: new Date().toISOString() });
     localStorage.setItem('playbase-mixes', JSON.stringify(mixes));
     fb.textContent = 'Mix saved to your account history.'; btn.textContent = '✓ Saved to account'; btn.classList.add('is-saved');
   }
-
-  document.getElementById('mxSelA').onchange = document.getElementById('mxSelB').onchange = () => { variant = 0; update(); };
   document.getElementById('mxAgain').onclick = () => { variant++; update(); };
   document.getElementById('mxShuffle').onclick = () => {
-    const pick = () => MIX_POOL[Math.floor(Math.random() * MIX_POOL.length)].id; let x = pick(), y = pick(); while(y === x) y = pick();
-    document.getElementById('mxSelA').value = x; document.getElementById('mxSelB').value = y; variant = 0; update();
+    const ids = MIX_POOL.map(g => g.id); const x = ids[Math.floor(Math.random() * ids.length)];
+    const rest = ids.filter(i => i !== x); mixPicks = { a: x, b: rest[Math.floor(Math.random() * rest.length)] }; mixSave(); renderMixer();
   };
+  document.getElementById('mxReset').onclick = () => { mixPicks = {}; mixSave(); renderMixer(); };
   update();
 }

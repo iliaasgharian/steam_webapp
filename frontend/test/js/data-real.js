@@ -5,13 +5,13 @@
 //                  "only" = use ONLY these 10 games (fake games removed from lists and collections)
 //                  "off"  = ignore this file
 //
-// Where the numbers come from (snapshot, prototype only — the backend will replace all of this):
-//  • Static facts (appid, developer, publisher, release date, genres, tags, list price): Steam store pages.
-//    CS2 uses the Steam page date (2012-08-21); the CS2 update itself launched 2023-09-27.
-//  • players (concurrent): CS2 / Dota 2 / PUBG from Steam's official stats page, Oct 9 2026; Stardew Valley from
-//    steamcharts.com; the other five are rough estimates.
-//  • reviews (% positive) and reviewCount: rounded approximations. delta (24h change) is 0 because it is unknown.
-//  • Images: Steam's public CDN (needs internet). If a file fails to load, the colored gradient shows instead.
+// Where the data comes from (be careful — most of it is NOT verified):
+//  • Looked up online (Oct 2026): players for CS2, Dota 2, PUBG (Steam official stats page, Oct 9 2026) and Stardew Valley (steamcharts.com, undated).
+//  • Written from memory, NOT checked against Steam: appid, developer, publisher, releaseDate, price, features, reviews %, reviewCount.
+//    CS2 uses the 2012 Steam page date; the CS2 update itself launched 2023-09-27.
+//  • My own choices: genres (e.g. "FPS", "MOBA", "Battle Royale" are my labels) and tags (not Steam's real user-tag lists).
+//  • Estimates / placeholders: players for the other 6 games, delta (0), discount (0), reviewCount rounding.
+//  • Images: URLs built from the Steam CDN pattern; not tested here. Screenshots in images/games are generated placeholder art.
 const REAL_DATA_MODE = "add";
 
 const steamImg = (appid, file = "header.jpg") => `https://cdn.akamai.steamstatic.com/steam/apps/${appid}/${file}`;

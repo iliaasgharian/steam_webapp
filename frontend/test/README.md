@@ -56,7 +56,11 @@ If an image is missing, the old colored gradient shows behind it.
 
 ## Real sample data (10 Steam games)
 
-`js/data-real.js` adds 10 well-known Steam games (CS2, Dota 2, PUBG, Elden Ring, Baldur's Gate 3, Cyberpunk 2077, Stardew Valley, Hollow Knight, Hades, Terraria) with real names, developers, release dates, genres/tags and Steam header images.
+`js/data-real.js` adds 10 well-known Steam games (CS2, Dota 2, PUBG, Elden Ring, Baldur's Gate 3, Cyberpunk 2077, Stardew Valley, Hollow Knight, Hades, Terraria) with real names and Steam header images. Most other fields were written from memory and are NOT verified — see the comment at the top of that file for exactly which fields are looked-up, remembered, estimated or placeholder.
 Change `REAL_DATA_MODE` at the top of the file: `"add"` (default, next to the fake games), `"only"` (just the 10 real games) or `"off"`.
 Player counts / review numbers are rounded snapshots (see the comment in the file). Requirements, DLC and comments on the detail page are still sample text.
 Images load from Steam's CDN, so they need internet; offline, the colored gradient shows instead.
+
+### Picking games in the Mixer
+
+Clicking a slot opens `#/mixer/pick/a` (or `/b`): the same filter sidebar as "All games", but tiles show only the image and name (no hover panel, no wishlist, no link to the game page). Clicking a tile saves the pick and returns to `#/mixer`; the other slot works the same way. The tile layout is `mixPickTile()` in `js/pages/mixer.js`; `catalog.js` accepts a custom `tile` function for this.

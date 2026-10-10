@@ -26,3 +26,22 @@
 .mx-why{color:var(--text-faint);text-align:right}
 @media(max-width:900px){.mx-similar{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.mx-similar{grid-template-columns:1fr}.mx-op{padding-bottom:0}.mx-slot{width:100%}.mx-result-main{padding:22px 18px}}
+
+/* ---- slots are links to the picker page ---- */
+a.mx-slot{display:block;text-decoration:none;color:var(--text);cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s}
+a.mx-slot:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(40,50,80,.14);border-color:var(--accent)}
+.mx-slot.empty{border-style:dashed}
+.mx-slot.empty .mx-cover{background:var(--surface-2);display:flex;align-items:center;justify-content:center}
+.mx-plus{font:300 54px var(--font-display);color:var(--text-faint);line-height:1}
+.mx-label{display:block;font:600 10.5px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px}
+.mx-name{display:block;font-size:16px}
+.mx-change{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:600;color:var(--accent-dim)}
+.mx-actions button[disabled]{opacity:.45;cursor:not-allowed}
+/* ---- picker page tiles: image + name only ---- */
+.mx-back{display:inline-block;margin-bottom:14px;font-weight:600;color:var(--accent-dim);text-decoration:none}
+.mx-back:hover{text-decoration:underline}
+.mix-pick-tile{display:block;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s}
+.mix-pick-tile:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(40,50,80,.14);border-color:var(--accent)}
+.mix-pick-tile.is-current{outline:2px solid var(--accent);outline-offset:-2px}
+.mix-pick-art{aspect-ratio:16/9}
+.mix-pick-name{padding:11px 13px;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

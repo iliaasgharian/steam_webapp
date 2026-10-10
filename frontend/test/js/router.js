@@ -29,6 +29,7 @@ function route(){
   else if (parts[0] === "trending") renderTrending();
   else if (parts[0] === "deals") renderDeals();
   else if (parts[0] === "analytics") renderAnalytics();
+  else if (parts[0] === "mixer" && parts[1] === "pick") renderMixerPicker(parts[2]);
   else if (parts[0] === "mixer") renderMixer();
   else if (parts[0] === "about") renderAbout();
   else if (parts[0] === "contact") renderContact();

@@ -2,7 +2,7 @@
 // Used by Browse (all games) and by every collection page (bundles, free games, top week...).
 // To change the filter UI for all of them, edit this one file.
 //
-// opts = { data, kicker, title, desc, genres, genreCount(g), sorts:[[value,label],...], totalText(n) }
+// opts = { tile(g) (optional custom tile html, default gameTile), data, kicker, title, desc, genres, genreCount(g), sorts:[[value,label],...], totalText(n) }
 
 /* ================= SHARED CATALOG (filters on the left) ================= */
 function renderCatalog(opts){
@@ -124,7 +124,7 @@ function renderCatalog(opts){
   function renderResults(){
     const list=filterList(applied);
     resultCount.textContent=totalText(list.length);
-    grid.innerHTML=list.length?list.map(gameTile).join(''):`<div class="collection-empty">No games match these filters.</div>`;
+    grid.innerHTML=list.length?list.map(g=>(opts.tile||gameTile)(g)).join(''):`<div class="collection-empty">No games match these filters.</div>`;
     const chips=[];
     applied.genres.forEach(x=>chips.push(x)); applied.features.forEach(x=>chips.push(x)); applied.tags.forEach(x=>chips.push(x)); applied.developers.forEach(x=>chips.push(x)); applied.publishers.forEach(x=>chips.push(x));
     if(applied.from)chips.push(`From ${applied.from}`); if(applied.to)chips.push(`To ${applied.to}`); if(applied.rating)chips.push(`Rating ≥ ${applied.rating}%`);
