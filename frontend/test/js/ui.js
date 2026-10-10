@@ -55,24 +55,3 @@ function countUp(el, target, suffix=""){
   }
   requestAnimationFrame(step);
 }
-
-
-/* ---- Line-chart hover: cursor line, dot and tooltip (charts are plain HTML from lineChart()) ---- */
-(function(){
-  const cache=new WeakMap();
-  const data=lc=>{ let d=cache.get(lc); if(!d){ try{ d=JSON.parse(lc.dataset.pts); }catch(e){ d=[]; } cache.set(lc,d); } return d; };
-  function show(plot,clientX){
-    const lc=plot.closest('.lc'), pts=data(lc); if(!pts.length) return;
-    const r=plot.getBoundingClientRect(); if(!r.width) return;
-    const i=Math.max(0,Math.min(pts.length-1,Math.round((clientX-r.left)/r.width*(pts.length-1))));
-    const [label,value,y]=pts[i], x=i/(pts.length-1)*100;
-    const cur=plot.querySelector('.lc-cursor'), dot=plot.querySelector('.lc-dot'), tip=plot.querySelector('.lc-tip');
-    cur.style.left=x+'%'; dot.style.left=x+'%'; dot.style.top=y+'%';
-    tip.innerHTML=`<b>${Number(value).toLocaleString()}</b> ${lc.dataset.unit}<br><span>${label}</span>`;
-    tip.style.left=x+'%'; tip.classList.toggle('left',x>70); tip.classList.toggle('right',x<=70);
-    plot.classList.add('active');
-  }
-  document.addEventListener('pointermove',e=>{ const p=e.target.closest&&e.target.closest('.lc-plot'); if(p) show(p,e.clientX); });
-  document.addEventListener('pointerleave',()=>{},true);
-  document.addEventListener('pointerout',e=>{ const p=e.target.closest&&e.target.closest('.lc-plot'); if(p&&!p.contains(e.relatedTarget)) p.classList.remove('active'); });
-})();

@@ -14,11 +14,11 @@ function renderAnalytics(){
         <div class="chart-card">
           <div class="chart-title">Total concurrent players — 30 days</div>
           <div class="chart-sub">Sum across all tracked games</div>
-          ${lineChart({seed:'site-players',kind:'month',end:GAMES.reduce((n,g)=>n+(g.players||0),0),delta:GAMES.reduce((n,g)=>n+(g.delta||0),0)/GAMES.length,unit:'players',caption:'players online now'})}
+          ${lineChart(2)}
         </div>
         <div class="chart-card">
           <div class="chart-title">Catalog review sentiment</div>
-          <div class="chart-sub">Weighted by review count across tracked games</div>
+          <div class="chart-sub">Weighted across ${fmt(61204)} games</div>
           ${barChart()}
         </div>
       </div>

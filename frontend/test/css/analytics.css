@@ -15,24 +15,3 @@
   .chart-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px 22px; }
   .chart-title { font-size:13.5px; font-weight:600; margin-bottom:2px; }
   .chart-sub { font-size:11.5px; color:var(--text-faint); margin-bottom:16px; }
-
-
-/* ================= Line charts (lineChart in utils.js) ================= */
-.lc .chart-value-row{align-items:flex-start;gap:10px;flex-wrap:wrap}
-.chart-value-wrap{display:flex;flex-direction:column;gap:2px}
-.chart-value-cap{font-size:11px;color:var(--text-faint);font-weight:500}
-.lc-body{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;height:170px}
-.lc-y{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;font:500 10px var(--font-mono);color:var(--text-faint);line-height:1;padding:0}
-.lc-y span:first-child{transform:translateY(-1px)}
-.lc-plot{position:relative;touch-action:pan-y;cursor:crosshair}
-.lc-plot svg{display:block;width:100%;height:100%;overflow:visible}
-.lc-grid{stroke:var(--border);stroke-width:1;vector-effect:non-scaling-stroke;stroke-dasharray:3 4}
-.lc-cursor{position:absolute;top:0;bottom:0;width:1px;background:rgba(111,79,240,.35);opacity:0;pointer-events:none;transform:translateX(-.5px)}
-.lc-dot{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#fff;border:2px solid #6F4FF0;opacity:0;pointer-events:none;box-shadow:0 2px 8px rgba(111,79,240,.4)}
-.lc-tip{position:absolute;top:-6px;z-index:4;min-width:92px;padding:7px 10px;border-radius:8px;background:#161A22;color:#fff;font-size:12px;line-height:1.35;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s;box-shadow:0 8px 22px rgba(20,24,40,.25)}
-.lc-tip span{color:#aab1c0;font-size:11px}
-.lc-tip.right{transform:translateX(12px)}.lc-tip.left{transform:translateX(calc(-100% - 12px))}
-.lc-plot.active .lc-cursor,.lc-plot.active .lc-dot,.lc-plot.active .lc-tip{opacity:1}
-.lc-x{display:grid;grid-template-columns:34px repeat(3,1fr);gap:0 8px;margin-top:8px;font:500 10px var(--font-mono);color:var(--text-faint)}
-.lc-x span:nth-child(1){grid-column:2;text-align:left}.lc-x span:nth-child(2){text-align:center}.lc-x span:nth-child(3){text-align:right}
-.lc-empty{padding:46px 0;text-align:center;color:var(--text-faint);font-size:13px}
