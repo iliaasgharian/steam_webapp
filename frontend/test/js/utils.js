@@ -9,6 +9,7 @@ function chips(arr){ return arr.map(g=>`<span class="chip">${g}</span>`).join(""
 // If an image is missing, the colored gradient behind it is shown instead.
 function gameImg(g){ return g.image || `images/games/${g.id}.svg`; }
 function gameShot(g,n){ return (g.shots && g.shots[n-1]) || `images/games/${g.id}-${n}.svg`; }
+function gameHero(g){ return g.hero || gameImg(g); }   // wide banner for the detail page (falls back to the cover)
 function tileArt(g,h=100){
   const c1 = gc(g.genres[0]);
   return `<div class="tile-art" style="height:${h}px;background:url(${gameImg(g)}) center/cover no-repeat, linear-gradient(135deg, ${c1}38, #E9ECF2 85%)">

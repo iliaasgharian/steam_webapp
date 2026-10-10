@@ -53,3 +53,10 @@ If an image is missing, the old colored gradient shows behind it.
 ## Game Mixer
 
 `js/pages/mixer.js` blends two games from their tags/genres: a concept name + pitch, shared / unique DNA tags, and the 3 closest existing games (games that share tags with BOTH picks rank first). It runs in the browser on the sample data. Later, replace `mixGames()` with a call to the backend (`POST /api/mix`: pgvector similarity + LLM text); the UI stays the same. Styles: `css/mixer.css`.
+
+## Real sample data (10 Steam games)
+
+`js/data-real.js` adds 10 well-known Steam games (CS2, Dota 2, PUBG, Elden Ring, Baldur's Gate 3, Cyberpunk 2077, Stardew Valley, Hollow Knight, Hades, Terraria) with real names, developers, release dates, genres/tags and Steam header images.
+Change `REAL_DATA_MODE` at the top of the file: `"add"` (default, next to the fake games), `"only"` (just the 10 real games) or `"off"`.
+Player counts / review numbers are rounded snapshots (see the comment in the file). Requirements, DLC and comments on the detail page are still sample text.
+Images load from Steam's CDN, so they need internet; offline, the colored gradient shows instead.

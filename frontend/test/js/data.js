@@ -18,7 +18,7 @@ const GAMES = [
   { id:"nightbloom", name:"Nightbloom", developer:"Moonlit Works", publisher:"Northstar Publishing", releaseDate:"2026-04-02", genres:["RPG","Story Rich"], price:3499, discount:15, players:18420, delta:8.9, reviews:94, reviewCount:17200 },
   { id:"quarryrun", name:"Quarry Run", developer:"Ember Forge", publisher:"Ember Forge", releaseDate:"2025-06-28", genres:["Puzzle","Indie"], price:599, discount:0, players:3020, delta:0.4, reviews:81, reviewCount:2200 }
 ];
-const FEATURED = GAMES[0];
+let FEATURED = GAMES[0];
 const ALL_GENRES = [...new Set(GAMES.flatMap(g=>g.genres))];
 const FREE_GAMES = [GAMES[7], {id:"freefall",name:"Freefall Protocol",genres:["Action","Indie"],price:0,discount:0,players:1840,delta:5.2,reviews:86,reviewCount:980}, {id:"starforge",name:"Starforge Arena",genres:["Strategy","Sci-Fi"],price:0,discount:0,players:7210,delta:9.1,reviews:82,reviewCount:5400}, {id:"pixelquest",name:"Pixel Quest Online",genres:["Adventure","RPG"],price:0,discount:0,players:4310,delta:3.8,reviews:89,reviewCount:3200}];
 const BUNDLES = [{id:"indie-pack",name:"Indie Discovery Pack",genres:["Indie","Adventure"],price:2999,discount:55,players:0,delta:0,reviews:91,reviewCount:8200},{id:"strategy-core",name:"Strategy Core Bundle",genres:["Strategy","Turn-Based"],price:4499,discount:48,players:0,delta:0,reviews:88,reviewCount:12600},{id:"night-pack",name:"Nightfall Collection",genres:["RPG","Story Rich"],price:3999,discount:42,players:0,delta:0,reviews:94,reviewCount:15100},{id:"arcade-pack",name:"Arcade Rush Bundle",genres:["Racing","Arcade"],price:1899,discount:50,players:0,delta:0,reviews:87,reviewCount:4300}];
