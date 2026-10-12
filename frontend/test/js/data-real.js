@@ -1,4 +1,4 @@
-// REAL SAMPLE DATA — 10 well-known Steam games, for testing the UI with real names and numbers.
+// REAL SAMPLE DATA — 20 well-known Steam games, for testing the UI with real names and numbers.
 // Load order: data.js → data-real.js → utils.js → ...
 //
 // REAL_DATA_MODE:  "add"  = append these games to the fake sample games (default)
@@ -10,11 +10,12 @@
 //  • Written from memory, NOT checked against Steam: appid, developer, publisher, releaseDate, price, features, reviews %, reviewCount.
 //    CS2 uses the 2012 Steam page date; the CS2 update itself launched 2023-09-27.
 //  • My own choices: genres (e.g. "FPS", "MOBA", "Battle Royale" are my labels) and tags (not Steam's real user-tag lists).
-//  • Estimates / placeholders: players for the other 6 games, delta (0), discount (0), reviewCount rounding.
-//  • Images: URLs built from the Steam CDN pattern; not tested here. Screenshots in images/games are generated placeholder art.
+//  • Estimates / placeholders: players for all games except the 4 above, delta (0), discount (0), reviewCount rounding.
+//  • Images: NOT stored in the project. gameBg() in utils.js builds them from `appid` (local file first, then Steam CDN hosts,
+//    then the generated placeholder art). Run tools/download_images.py once (needs internet) to save real images locally.
 const REAL_DATA_MODE = "add";
 
-const steamImg = (appid, file = "header.jpg") => `https://cdn.akamai.steamstatic.com/steam/apps/${appid}/${file}`;
+// To add a game: copy an entry, change id/appid/name/... (appid = the number in the game's Steam store URL).
 const REAL_GAMES = [
   { id:"cs2", appid:730, name:"Counter-Strike 2", developer:"Valve", publisher:"Valve", releaseDate:"2012-08-21",
     genres:["FPS","Action"], price:0, discount:0, players:498594, delta:0, reviews:86, reviewCount:9000000,
@@ -45,8 +46,38 @@ const REAL_GAMES = [
     tags:["Fast-Paced","Story Rich","Replay Value","Singleplayer","Controller Support","Atmospheric"], features:["Singleplayer","Controller Support","Achievements","Steam Deck Compatible"] },
   { id:"terraria", appid:105600, name:"Terraria", developer:"Re-Logic", publisher:"Re-Logic", releaseDate:"2011-05-16",
     genres:["Survival","Adventure","Indie"], price:999, discount:0, players:30000, delta:0, reviews:97, reviewCount:1000000,
-    tags:["Sandbox","Crafting","Pixel Graphics","Co-op","Open World","Multiplayer","Singleplayer","Replay Value"], features:["Singleplayer","Multiplayer","Controller Support","Achievements","Steam Deck Compatible"] }
-].map(g => ({ ...g, image: steamImg(g.appid), hero: steamImg(g.appid, "library_hero.jpg") }));
+    tags:["Sandbox","Crafting","Pixel Graphics","Co-op","Open World","Multiplayer","Singleplayer","Replay Value"], features:["Singleplayer","Multiplayer","Controller Support","Achievements","Steam Deck Compatible"] },
+  { id:"apex", appid:1172470, name:"Apex Legends", developer:"Respawn Entertainment", publisher:"Electronic Arts", releaseDate:"2020-11-04",
+    genres:["Battle Royale","FPS","Action"], price:0, discount:0, players:90000, delta:0, reviews:80, reviewCount:1000000,
+    tags:["Shooter","Multiplayer","Competitive","Team-Based","Fast-Paced","Free to Play"], features:["Multiplayer","Achievements"] },
+  { id:"tf2", appid:440, name:"Team Fortress 2", developer:"Valve", publisher:"Valve", releaseDate:"2007-10-10",
+    genres:["FPS","Action"], price:0, discount:0, players:55000, delta:0, reviews:92, reviewCount:1000000,
+    tags:["Shooter","Multiplayer","Team-Based","Class-Based","Fast-Paced","Free to Play"], features:["Multiplayer","Achievements"] },
+  { id:"rust", appid:252490, name:"Rust", developer:"Facepunch Studios", publisher:"Facepunch Studios", releaseDate:"2018-02-08",
+    genres:["Survival","Action","Adventure"], price:3999, discount:0, players:90000, delta:0, reviews:87, reviewCount:700000,
+    tags:["Open World","Multiplayer","Crafting","Competitive","Difficult"], features:["Multiplayer"] },
+  { id:"portal2", appid:620, name:"Portal 2", developer:"Valve", publisher:"Valve", releaseDate:"2011-04-18",
+    genres:["Puzzle","Adventure"], price:999, discount:0, players:6000, delta:0, reviews:98, reviewCount:380000,
+    tags:["Co-op","Sci-Fi","Atmospheric","Story Rich","Singleplayer","Multiplayer"], features:["Singleplayer","Multiplayer","Controller Support","Achievements"] },
+  { id:"rdr2", appid:1174180, name:"Red Dead Redemption 2", developer:"Rockstar Games", publisher:"Rockstar Games", releaseDate:"2019-12-05",
+    genres:["Action","Adventure"], price:5999, discount:0, players:18000, delta:0, reviews:92, reviewCount:600000,
+    tags:["Open World","Story Rich","Atmospheric","Singleplayer","Multiplayer","Controller Support"], features:["Singleplayer","Multiplayer","Controller Support","Achievements"] },
+  { id:"witcher3", appid:292030, name:"The Witcher 3: Wild Hunt", developer:"CD PROJEKT RED", publisher:"CD PROJEKT RED", releaseDate:"2015-05-18",
+    genres:["RPG","Action"], price:3999, discount:0, players:40000, delta:0, reviews:96, reviewCount:800000,
+    tags:["Open World","Story Rich","Fantasy","Atmospheric","Singleplayer","Controller Support"], features:["Singleplayer","Controller Support","Achievements"] },
+  { id:"sekiro", appid:814380, name:"Sekiro: Shadows Die Twice", developer:"FromSoftware, Inc.", publisher:"Activision", releaseDate:"2019-03-22",
+    genres:["Action","Adventure"], price:5999, discount:0, players:9000, delta:0, reviews:94, reviewCount:270000,
+    tags:["Souls-like","Difficult","Fast-Paced","Atmospheric","Singleplayer","Controller Support"], features:["Singleplayer","Controller Support","Achievements"] },
+  { id:"civ6", appid:289070, name:"Sid Meier's Civilization VI", developer:"Firaxis Games", publisher:"2K", releaseDate:"2016-10-21",
+    genres:["Strategy","Turn-Based"], price:5999, discount:0, players:30000, delta:0, reviews:83, reviewCount:280000,
+    tags:["Replay Value","Multiplayer","Singleplayer"], features:["Singleplayer","Multiplayer","Achievements"] },
+  { id:"slaythespire", appid:646570, name:"Slay the Spire", developer:"Mega Crit", publisher:"Mega Crit", releaseDate:"2019-01-23",
+    genres:["Roguelike","Strategy","Indie"], price:2499, discount:0, players:10000, delta:0, reviews:97, reviewCount:150000,
+    tags:["Turn-Based","Card Game","Replay Value","Difficult","Singleplayer"], features:["Singleplayer","Controller Support","Achievements"] },
+  { id:"helldivers2", appid:553850, name:"HELLDIVERS 2", developer:"Arrowhead Game Studios", publisher:"Sony Interactive Entertainment", releaseDate:"2024-02-08",
+    genres:["Action","Shooter"], price:3999, discount:0, players:20000, delta:0, reviews:83, reviewCount:620000,
+    tags:["Co-op","Multiplayer","Fast-Paced","Sci-Fi","Team-Based","Controller Support"], features:["Multiplayer","Controller Support","Achievements"] }
+];
 
 (function applyRealData(){
   if (REAL_DATA_MODE === "off") return;
@@ -55,10 +86,10 @@ const REAL_GAMES = [
   const uniq = a => [...new Set(a)];
 
   // new genres + tags used by the real games (colors/emojis are optional — fallbacks exist)
-  Object.assign(GENRE_COLORS, { FPS:"#E5384F", MOBA:"#2E7FE0", "Battle Royale":"#E86A12", Simulation:"#0FA37A", Survival:"#CC4452", Platformer:"#12AFA0" });
+  Object.assign(GENRE_COLORS, { FPS:"#E5384F", MOBA:"#2E7FE0", "Battle Royale":"#E86A12", Simulation:"#0FA37A", Survival:"#CC4452", Platformer:"#12AFA0", Shooter:"#E5384F" });
   const newTags = { FPS:["🎯","#E5384F"], MOBA:["🧙","#2E7FE0"], "Battle Royale":["🪂","#E86A12"], Shooter:["🔫","#E5384F"], Competitive:["🏆","#D98300"],
     "Team-Based":["🤝","#0FA37A"], Tactical:["♟️","#2E7FE0"], Esports:["📺","#6F4FF0"], Survival:["🏕️","#CC4452"], Simulation:["🧑‍🌾","#0FA37A"],
-    Platformer:["🪜","#12AFA0"], "Co-op":["👥","#0FA37A"], "Souls-like":["🗡️","#CC4452"], Fantasy:["🐉","#6F4FF0"], Crafting:["🛠️","#D98300"],
+    Platformer:["🪜","#12AFA0"], "Free to Play":["🆓","#0FA37A"], "Class-Based":["🧑‍🔧","#D98300"], "Card Game":["🃏","#6F4FF0"], "Co-op":["👥","#0FA37A"], "Souls-like":["🗡️","#CC4452"], Fantasy:["🐉","#6F4FF0"], Crafting:["🛠️","#D98300"],
     "Pixel Graphics":["🟦","#2E7FE0"], Sandbox:["🏖️","#D98300"], "Farming Sim":["🌾","#0FA37A"] };
   for (const [t, m] of Object.entries(newTags)) if (!TAG_META[t]) TAG_META[t] = m;
 

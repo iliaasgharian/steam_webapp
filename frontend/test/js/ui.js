@@ -22,7 +22,7 @@ searchInput.addEventListener("input", () => {
   const matches = GAMES.filter(g=>g.name.toLowerCase().includes(q)).slice(0,6);
   acList.innerHTML = matches.length ? matches.map(g=>`
     <div class="ac-row" onclick="location.hash='/game/${g.id}';closeSearch()">
-      <div class="ac-thumb" style="background:url(${gameImg(g)}) center/cover no-repeat, linear-gradient(135deg, ${gc(g.genres[0])}, ${gc(g.genres[0])}55)"></div>
+      <div class="ac-thumb" style="background:${gameBg(g)}, linear-gradient(135deg, ${gc(g.genres[0])}, ${gc(g.genres[0])}55)"></div>
       <span class="ac-name">${g.name}</span><span class="ac-genre">${g.genres[0]}</span>
     </div>`).join("") : `<div class="ac-empty">No games match "${q}".</div>`;
   acList.classList.add("open");

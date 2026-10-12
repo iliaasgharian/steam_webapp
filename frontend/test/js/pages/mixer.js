@@ -49,7 +49,7 @@ function mixGames(A, B, variant = 0){
 
 // Minimal tile for the picker: image + name only (no link to the game, no hover panel, no wishlist).
 function mixPickTile(g, current){
-  const art = `url(${gameImg(g)}) center/cover no-repeat, linear-gradient(135deg, ${gc(g.genres[0])}, ${gc(g.genres[0])}55)`;
+  const art = `${gameBg(g)}, linear-gradient(135deg, ${gc(g.genres[0])}, ${gc(g.genres[0])}55)`;
   return `<a class="mix-pick-tile${current ? ' is-current' : ''}" href="#/mixer" data-pick-id="${g.id}"><div class="mix-pick-art" style="background:${art}"></div><div class="mix-pick-name">${g.name}</div></a>`;
 }
 
@@ -85,7 +85,7 @@ function renderMixer(animate = true){
   try{ const p = JSON.parse(localStorage.getItem('playbase-mix-pending') || 'null'); if(p && localStorage.getItem('playbase-user')){ mixPicks = { a: p.a, b: p.b }; mixSave(); localStorage.removeItem('playbase-mix-pending'); localStorage.removeItem('playbase-mix-intent'); mixed = true; } }catch(e){}
   ['a','b'].forEach(k => { if(!mixById(mixPicks[k])) delete mixPicks[k]; });
   let variant = 0, last = null;
-  const cover = g => `style="background:url(${gameImg(g)}) center/cover no-repeat, linear-gradient(135deg, ${gc(g.genres[0])}, ${gc(g.genres[0])}55)"`;
+  const cover = g => `style="background:${gameBg(g)}, linear-gradient(135deg, ${gc(g.genres[0])}, ${gc(g.genres[0])}55)"`;
   const slotHTML = (k, label) => { const g = mixById(mixPicks[k]);
     return `<a class="mx-slot ${g ? 'filled' : 'empty'}" href="#/mixer/pick/${k}" aria-label="${g ? 'Change' : 'Choose'} the ${label} game">
       <div class="mx-cover" ${g ? cover(g) : ''}>${g ? '' : '<span class="mx-plus">+</span>'}</div>

@@ -4,15 +4,30 @@
 function money(c){ return "$" + (c/100).toFixed(2); }
 function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
 function chips(arr){ return arr.map(g=>`<span class="chip">${g}</span>`).join(""); }
-// Game images. Put files in images/games/<id>.svg (cover) and <id>-1..5.svg (screenshots),
-// or set g.image / g.shots[] in data.js to any path or URL (e.g. a Steam header image).
-// If an image is missing, the colored gradient behind it is shown instead.
-function gameImg(g){ return g.image || `images/games/${g.id}.svg`; }
-function gameShot(g,n){ return (g.shots && g.shots[n-1]) || `images/games/${g.id}-${n}.svg`; }
-function gameHero(g){ return g.hero || gameImg(g); }   // wide banner for the detail page (falls back to the cover)
+// Game images. gameBg(g) builds a CSS background made of several layers; the first layer that loads is shown,
+// and if a file is missing or blocked the next layer shows through. Order for a game with an `appid`:
+//   your own file  →  images/games/<id>.jpg (what tools/download_images.py saves)  →  Steam CDN (4 hosts)  →  images/games/<id>.svg (placeholder)
+// kind: "cover" (default) | "hero" (wide banner, detail page) | 1..5 (screenshots: <id>-N.jpg → <id>-N.svg)
+// Per game you can override with  image: "..."  /  hero: "..."  /  shots: [...]  in data.js.
+const STEAM_HOSTS = ["https://shared.akamai.steamstatic.com/store_item_assets/steam", "https://cdn.akamai.steamstatic.com/steam", "https://cdn.cloudflare.steamstatic.com/steam", "https://steamcdn-a.akamaihd.net/steam"];
+const steamUrls = (appid, file) => STEAM_HOSTS.map(h => `${h}/apps/${appid}/${file}`);
+function gameBg(g, kind = "cover"){
+  const L = [];
+  if (typeof kind === "number"){
+    if (g.shots && g.shots[kind-1]) L.push(g.shots[kind-1]);
+    if (g.appid) L.push(`images/games/${g.id}-${kind}.jpg`);
+    L.push(`images/games/${g.id}-${kind}.svg`);
+  } else {
+    if (kind === "hero"){ if (g.hero) L.push(g.hero); if (g.appid){ L.push(`images/games/${g.id}-hero.jpg`, ...steamUrls(g.appid, "library_hero.jpg")); } }
+    if (g.image) L.push(g.image);
+    if (g.appid) L.push(`images/games/${g.id}.jpg`, ...steamUrls(g.appid, "header.jpg"));
+    L.push(`images/games/${g.id}.svg`);
+  }
+  return L.map(u => `url(${u}) center/cover no-repeat`).join(", ");
+}
 function tileArt(g,h=100){
   const c1 = gc(g.genres[0]);
-  return `<div class="tile-art" style="height:${h}px;background:url(${gameImg(g)}) center/cover no-repeat, linear-gradient(135deg, ${c1}38, #E9ECF2 85%)">
+  return `<div class="tile-art" style="height:${h}px;background:${gameBg(g)}, linear-gradient(135deg, ${c1}38, #E9ECF2 85%)">
     ${g.discount ? `<span class="discount-badge">-${g.discount}%</span>` : ""}
   </div>`;
 }

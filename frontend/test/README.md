@@ -56,10 +56,10 @@ If an image is missing, the old colored gradient shows behind it.
 
 ## Real sample data (10 Steam games)
 
-`js/data-real.js` adds 10 well-known Steam games (CS2, Dota 2, PUBG, Elden Ring, Baldur's Gate 3, Cyberpunk 2077, Stardew Valley, Hollow Knight, Hades, Terraria) with real names and Steam header images. Most other fields were written from memory and are NOT verified — see the comment at the top of that file for exactly which fields are looked-up, remembered, estimated or placeholder.
+`js/data-real.js` adds 20 well-known Steam games (CS2, Dota 2, PUBG, Elden Ring, Baldur's Gate 3, Cyberpunk 2077, Stardew Valley, Hollow Knight, Hades, Terraria, Apex Legends, Team Fortress 2, Rust, Portal 2, Red Dead Redemption 2, The Witcher 3, Sekiro, Civilization VI, Slay the Spire, HELLDIVERS 2) with real names and Steam header images. Most other fields were written from memory and are NOT verified — see the comment at the top of that file for exactly which fields are looked-up, remembered, estimated or placeholder.
 Change `REAL_DATA_MODE` at the top of the file: `"add"` (default, next to the fake games), `"only"` (just the 10 real games) or `"off"`.
 Player counts / review numbers are rounded snapshots (see the comment in the file). Requirements, DLC and comments on the detail page are still sample text.
-Images load from Steam's CDN, so they need internet; offline, the colored gradient shows instead.
+Images: no image files are shipped for these games. `gameBg()` in `js/utils.js` tries your local `images/games/<id>.jpg` first, then four Steam CDN hosts, then the generated placeholder art. To make them always work, run `python tools/download_images.py` once (needs internet) — it saves covers, wide banners and screenshots into `images/games/`.
 
 ### Picking games in the Mixer
 
