@@ -33,7 +33,7 @@ function tileArt(g,h=100){
 }
 function gameTile(g){
   const tags=tagsForGame(g);
-  const peak=Math.round((g.players||0)*1.35);
+  const peak=g.peakYesterday||Math.round((g.players||0)*1.35);
   const rating=g.reviews||0;
   const trend=g.delta||0;
   const trendEmoji=trend>2?'📈':trend<-1?'📉':'➖';

@@ -5,18 +5,16 @@
 //                  "only" = use ONLY these 10 games (fake games removed from lists and collections)
 //                  "off"  = ignore this file
 //
-// Where the data comes from (be careful — most of it is NOT verified):
-//  • Looked up online (Oct 2026): players for CS2, Dota 2, PUBG (Steam official stats page, Oct 9 2026) and Stardew Valley (steamcharts.com, undated).
-//  • Written from memory, NOT checked against Steam: appid, developer, publisher, releaseDate, price, features, reviews %, reviewCount.
-//    CS2 uses the 2012 Steam page date; the CS2 update itself launched 2023-09-27.
-//  • My own choices: genres (e.g. "FPS", "MOBA", "Battle Royale" are my labels) and tags (not Steam's real user-tag lists).
-//  • Estimates / placeholders: players for all games except the 4 above, delta (0), discount (0), reviewCount rounding.
-//  • Images: NOT stored in the project. gameBg() in utils.js builds them from `appid` (local file first, then Steam CDN hosts,
-//    then the generated placeholder art). Run tools/download_images.py once (needs internet) to save real images locally.
-const REAL_DATA_MODE = "add";
+// Where the data comes from:
+//  • js/steam-games-data.js present → everything is scraped from Steam by scrape_steam_games.py (store appdetails, appreviews,
+//    current-players API, SteamSpy tags, Deck report). Names, developers, dates, prices, reviews, requirements, screenshots are real
+//    as of the scrape date. `delta` is 0 unless you scraped twice with --refresh. Not scraped: comments, DLC names, price history.
+//  • otherwise → the 20 hand-written SAMPLE_REAL_GAMES (written from memory, NOT verified; players mostly estimates).
+//  • Images: gameBg() in utils.js tries g.image, your local images/games/<id>.jpg, Steam CDN hosts, then placeholder art.
+const REAL_DATA_MODE = (typeof STEAM_GAMES_DATA !== "undefined") ? "only" : "add";   // "add" | "only" | "off"
 
 // To add a game: copy an entry, change id/appid/name/... (appid = the number in the game's Steam store URL).
-const REAL_GAMES = [
+const SAMPLE_REAL_GAMES = [
   { id:"cs2", appid:730, name:"Counter-Strike 2", developer:"Valve", publisher:"Valve", releaseDate:"2012-08-21",
     genres:["FPS","Action"], price:0, discount:0, players:498594, delta:0, reviews:86, reviewCount:9000000,
     tags:["Shooter","Multiplayer","Competitive","Team-Based","Tactical","Esports","Fast-Paced"], features:["Multiplayer"] },
@@ -79,6 +77,22 @@ const REAL_GAMES = [
     tags:["Co-op","Multiplayer","Fast-Paced","Sci-Fi","Team-Based","Controller Support"], features:["Multiplayer","Controller Support","Achievements"] }
 ];
 
+// ---- Scraped data (js/steam-games-data.js, made from the scraper's steam_games.json by tools/json_to_js.py) ----
+// If that file is loaded, it replaces the 20 hand-written games above. Everything in it comes from Steam (see scrape_steam_games.py).
+function fromScraped(r){
+  const clean = t => (t || "").replace(/[™®©]/g, "").trim();
+  const moved = r.genres.filter(x => /^(free to play|early access)$/i.test(x)).map(x => /free/i.test(x) ? "Free to Play" : "Early Access");
+  const genres = r.genres.filter(x => !/^(free to play|early access)$/i.test(x));     // these two are labels, not genres → tags
+  return { id:r.id, appid:r.appid, name:clean(r.name), developer:clean(r.developer) || "Unknown", publisher:clean(r.publisher) || "—",
+    releaseDate:r.releaseDate, genres:genres.length ? genres : ["Other"], price:r.price || 0, discount:r.discount || 0,
+    players:r.players || 0, delta:r.delta || 0, reviews:r.reviews == null ? 0 : r.reviews, reviewCount:r.reviewCount || 0,
+    tags:[...new Set([...(r.tags || []), ...moved])], features:r.features || [],
+    image:r.image, shots:r.screenshots || [], description:r.shortDescription, requirements:r.requirements, dlcCount:r.dlcCount || 0,
+    metacritic:r.metacritic, reviewLabel:r.reviewLabel, steamDeck:r.steamDeck, platforms:r.platforms, comingSoon:!!r.comingSoon,
+    peakYesterday:r.peakYesterday, website:r.website };
+}
+const REAL_GAMES = (typeof STEAM_GAMES_DATA !== "undefined" && STEAM_GAMES_DATA.games.length) ? STEAM_GAMES_DATA.games.map(fromScraped) : SAMPLE_REAL_GAMES;
+
 (function applyRealData(){
   if (REAL_DATA_MODE === "off") return;
   const only = REAL_DATA_MODE === "only";
@@ -102,14 +116,23 @@ const REAL_GAMES = [
     GAME_PUBLISHERS[g.id] = g.publisher;
   }
   swap(ALL_GENRES, uniq([...(only ? [] : ALL_GENRES), ...GAMES.flatMap(g => g.genres)]));
-  swap(ALL_TAGS, uniq([...(only ? [] : ALL_TAGS), ...GAMES.flatMap(tagsForGame)]).sort());
+  const tagCount = {}; GAMES.flatMap(tagsForGame).forEach(t => tagCount[t] = (tagCount[t] || 0) + 1);
+  const minUse = Math.max(3, Math.round(GAMES.length / 40));          // the tag filter lists only tags used by enough games
+  swap(ALL_TAGS, uniq([...(only ? [] : ALL_TAGS), ...Object.keys(tagCount).filter(t => tagCount[t] >= minUse)]).sort());
+  const PALETTE = ["#6F4FF0","#0FA37A","#E5384F","#D98300","#2E7FE0","#E86A12","#12AFA0","#CC4452","#8F5BFF","#1C86A8"];
+  GAMES.flatMap(g => g.genres).forEach(gn => { if (!GENRE_COLORS[gn]) GENRE_COLORS[gn] = PALETTE[[...gn].reduce((a, c) => a + c.charCodeAt(0), 0) % PALETTE.length]; });
+  const pick = t => PALETTE[[...t].reduce((a, c) => a + c.charCodeAt(0), 0) % PALETTE.length];
+  ALL_TAGS.forEach(t => { if (!TAG_META[t]) TAG_META[t] = ["🏷️", pick(t)]; });   // the Tags page needs an icon + color for every tag
   swap(DEVELOPERS, uniq([...(only ? [] : DEVELOPERS), ...games.map(g => g.developer)]));
   swap(PUBLISHERS, uniq([...(only ? [] : PUBLISHERS), ...games.map(g => g.publisher)]));
 
   if (only) {   // rebuild the collections that pointed at fake games
-    const top = (key, n = 4) => [...GAMES].sort((a, b) => b[key] - a[key]).slice(0, n);
-    swap(POPULAR, top("players"));  swap(WEEKLY, top("players"));  swap(MONTHLY, top("reviewCount"));
+    const N = Math.min(40, GAMES.length), top = (key) => [...GAMES].sort((a, b) => (b[key] || 0) - (a[key] || 0)).slice(0, N);
+    swap(POPULAR, top("players"));  swap(WEEKLY, top("peakYesterday"));  swap(MONTHLY, top("reviewCount"));
     swap(FREE_GAMES, GAMES.filter(g => g.price === 0));
+    const soon = GAMES.filter(g => g.comingSoon);
+    if (soon.length) swap(UPCOMING, soon);
+    swap(WISHLISTED, [...soon, ...top("reviewCount")].slice(0, 8));
     FEATURED = GAMES[0];
   }
 })();

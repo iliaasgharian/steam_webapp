@@ -64,3 +64,13 @@ Images: no image files are shipped for these games. `gameBg()` in `js/utils.js` 
 ### Picking games in the Mixer
 
 Clicking a slot opens `#/mixer/pick/a` (or `/b`): the same filter sidebar as "All games", but tiles show only the image and name (no hover panel, no wishlist, no link to the game page). Clicking a tile saves the pick and returns to `#/mixer`; the other slot works the same way. The tile layout is `mixPickTile()` in `js/pages/mixer.js`; `catalog.js` accepts a custom `tile` function for this.
+
+## Using the scraped Steam data (300 games)
+
+1. Run `python scrape_steam_games.py` (outside the site folder or inside it) → `steam_games.json`.
+2. Put the JSON in `data/steam_games.json` and run `python tools/json_to_js.py` → writes `js/steam-games-data.js`.
+3. Reload the site. `js/data-real.js` sees `STEAM_GAMES_DATA` and uses the scraped games instead of the 20 hand-written ones (`REAL_DATA_MODE` becomes `"only"`). Delete `js/steam-games-data.js` to go back to the hand-written games.
+
+Real on the detail page now: description, developer, publisher, release date, platforms, categories, Steam Deck, review label, Metacritic, requirements, screenshots, 24h peak (yesterday's peak players), "View on Steam" link, DLC count.
+Still sample data: bundles, analytics charts, regional prices (fixed rates), price signal, Steam Intelligence panels, site-wide numbers. Comments are hidden for scraped games (not scraped yet).
+Why a `.js` file and not a direct `fetch()` of the JSON: pages opened from a folder (`file://`) cannot fetch local files. Behind a real server or the FastAPI backend you can fetch the JSON instead.
