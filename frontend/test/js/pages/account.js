@@ -9,6 +9,7 @@ function handleWishlistClick(event){
  const id=String(btn.dataset.wishlistId||'');if(!id)return;
  if(!getPlaybaseUser()){localStorage.setItem('playbase-wishlist-intent',id);location.hash='#/login';return;}
  const ids=getPlaybaseWishlist();
+ if(typeof gameTileWishlistCache!=="undefined") gameTileWishlistCache=null;
  if(ids.includes(id))setPlaybaseWishlist(ids.filter(x=>x!==id));else setPlaybaseWishlist([...ids,id]);
  const updated=getPlaybaseWishlist().includes(id);
  document.querySelectorAll(`.wishlist-add[data-wishlist-id="${CSS.escape(id)}"]`).forEach(el=>{

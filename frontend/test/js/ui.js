@@ -41,8 +41,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMobile();});
 /* ================= Scroll reveal ================= */
 const revealObserver = new IntersectionObserver((entries)=>{
   entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); revealObserver.unobserve(e.target); } });
-}, { threshold: 0.15 });
-function armReveals(){ document.querySelectorAll(".reveal").forEach(el=>revealObserver.observe(el)); }
+}, { threshold: 0, rootMargin: "0px 0px 80px 0px" });
+function armReveals(){ document.querySelectorAll(".reveal:not(.in)").forEach(el=>revealObserver.observe(el)); }
 
 /* Count-up */
 function countUp(el, target, suffix=""){

@@ -26,11 +26,16 @@ function gameBg(g, kind = "cover"){
   return L.map(u => `url(${u}) center/cover no-repeat`).join(", ");
 }
 function tileArt(g,h=100){
-  const c1 = gc(g.genres[0]);
-  return `<div class="tile-art" style="height:${h}px;background:${gameBg(g)}, linear-gradient(135deg, ${c1}38, #E9ECF2 85%)">
+  const c1 = gc((g.genres||[])[0]);
+  const primary = g.image || (g.appid ? steamUrls(g.appid, "header.jpg")[0] : `images/games/${g.id}.svg`);
+  const fallback = `images/games/${g.id}.svg`;
+  return `<div class="tile-art" style="height:${h}px;background:linear-gradient(135deg, ${c1}38, #E9ECF2 85%)">
+    <img class="tile-image" src="${escapeHTML(primary)}" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${escapeHTML(fallback)}';this.classList.add('image-fallback')">
     ${g.discount ? `<span class="discount-badge">-${g.discount}%</span>` : ""}
   </div>`;
 }
+let gameTileWishlistCache = null;
+
 function gameTile(g){
   const tags=tagsForGame(g);
   const peak=g.peakYesterday||Math.round((g.players||0)*1.35);
@@ -39,8 +44,9 @@ function gameTile(g){
   const trendEmoji=trend>2?'📈':trend<-1?'📉':'➖';
   const trendLabel=trend>2?'Rising':trend<-1?'Cooling':'Stable';
   const current=g.discount?money(g.price*(1-g.discount/100)):money(g.price);
-  const saved=getPlaybaseWishlist ? getPlaybaseWishlist() : [];
-  const inWishlist=saved.includes(String(g.id));
+  if(gameTileWishlistCache===null) gameTileWishlistCache = new Set(getPlaybaseWishlist ? getPlaybaseWishlist() : []);
+  const saved=gameTileWishlistCache;
+  const inWishlist=saved.has(String(g.id));
   return `<div class="tile-wrap">
     <a class="tile game-tile" href="#/game/${g.id}">
       ${tileArt(g)}
