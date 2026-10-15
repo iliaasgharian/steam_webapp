@@ -16,10 +16,12 @@ function renderCatalog(opts){
       <div class="browse-layout reveal">
         <aside class="filter-panel browse-filter-panel">
           <div class="filter-panel-head"><div><span class="filter-kicker">FILTERS</span><h3>Find your game</h3></div><div class="filter-head-right"><span class="filter-count-badge" id="filterCountBadge" hidden></span><span class="pending-dot" id="filterPendingDot"></span></div></div>
-          <div class="filter-group">
-            <div class="filter-title">Genre</div>
-            ${genreList.map(g=>`<label class="check-row"><input type="checkbox" class="browse-genre" value="${g}"> <span>${g}</span><span class="check-count">${genreCount(g)}</span></label>`).join("")}
-          </div>
+          <details class="filter-dropdown genre-filter-dropdown">
+            <summary>Genre <span>⌄</span></summary>
+            <div class="filter-dropdown-body genre-filter-options">
+              ${genreList.map(g=>`<label class="check-row"><input type="checkbox" class="browse-genre" value="${g}"> <span>${g}</span><span class="check-count">${genreCount(g)}</span></label>`).join("")}
+            </div>
+          </details>
           <details class="filter-dropdown">
             <summary>Filter by features <span>⌄</span></summary>
             <div class="filter-dropdown-body">
@@ -46,14 +48,6 @@ function renderCatalog(opts){
           <div class="filter-group">
             <div class="filter-title">Platform</div>
             <div class="plat-row"><button type="button" class="plat-btn on" data-platform="Win">Win</button><button type="button" class="plat-btn" data-platform="Mac">Mac</button><button type="button" class="plat-btn" data-platform="Linux">Linux</button></div>
-          </div>
-          <div class="filter-group">
-            <div class="filter-title">Developer</div>
-            ${DEVELOPERS.map(d=>`<label class="check-row"><input type="checkbox" class="browse-developer" value="${d}"> <span>${d}</span><span class="check-count">${(data.filter(g=>g.developer===d).length)}</span></label>`).join("")}
-          </div>
-          <div class="filter-group">
-            <div class="filter-title">Publisher</div>
-            ${PUBLISHERS.map(p=>`<label class="check-row"><input type="checkbox" class="browse-publisher" value="${p}"> <span>${p}</span><span class="check-count">${(data.filter(g=>g.publisher===p).length)}</span></label>`).join("")}
           </div>
           <div class="filter-actions"><button class="apply-filter-btn" id="applyBrowseFilters">Apply filters</button><button class="clear-filter-btn" id="clearBrowseFilters">Clear all</button></div>
           <div class="filter-hint">Choose everything you want first. Results update only after <b>Apply filters</b>.</div>
@@ -83,17 +77,8 @@ function renderCatalog(opts){
   const features=[...view.querySelectorAll('.browse-feature')];
   const tags=[...view.querySelectorAll('.browse-tag')];
   const platformBtns=[...view.querySelectorAll('.plat-btn')];
-  const developers=[...view.querySelectorAll('.browse-developer')];
-  const publishers=[...view.querySelectorAll('.browse-publisher')];
-  // A selected studio/publisher from its directory is carried into All Games.
-  const directoryFilter=localStorage.getItem('playbase-directory-filter');
-  if(title==='Browse all games' && directoryFilter){
-    try { const saved=JSON.parse(directoryFilter);
-      if(saved.type==='developer') developers.forEach(x=>x.checked=x.value===saved.value);
-      if(saved.type==='publisher') publishers.forEach(x=>x.checked=x.value===saved.value);
-    } catch(e) {}
-    localStorage.removeItem('playbase-directory-filter');
-  }
+  const developers=[];
+  const publishers=[];
   let applied={genres:[],features:[],tags:[],developers:developers.filter(x=>x.checked).map(x=>x.value),publishers:publishers.filter(x=>x.checked).map(x=>x.value),from:'',to:'',rating:0,platform:'Win'};
 
   function pendingState(){

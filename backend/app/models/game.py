@@ -54,5 +54,6 @@ class Game(Base):
     developers = relationship("Company", secondary=game_developers, backref="developed_games")
     publishers = relationship("Company", secondary=game_publishers, backref="published_games")
 
-    player_snapshots = relationship("PlayerSnapshot", back_populates="game")
+    player_snapshots = relationship("PlayerSnapshot", back_populates="game", cascade="all, delete-orphan")
+    price_snapshots = relationship("PriceSnapshot", back_populates="game", cascade="all, delete-orphan")
     sales_chart_entries = relationship("SalesChart", back_populates="game")

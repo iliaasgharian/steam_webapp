@@ -18,6 +18,7 @@ router = APIRouter(prefix="/api/companies", tags=["companies"])
 def list_companies(
     q: Optional[str] = Query(None, description="Search by company name"),
     country: Optional[str] = Query(None),
+    kind: Optional[str] = Query(None, pattern="^(developer|publisher|both)$"),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
@@ -27,6 +28,10 @@ def list_companies(
         query = query.filter(Company.name.ilike(f"%{q}%"))
     if country:
         query = query.filter(Company.country.ilike(country))
+    if kind == "developer":
+        query = query.join(Company.developed_games).distinct()
+    elif kind == "publisher":
+        query = query.join(Company.published_games).distinct()
 
     total = query.count()
     companies = query.offset((page - 1) * page_size).limit(page_size).all()
@@ -51,3 +56,12 @@ def get_company(company_id: int, db: Session = Depends(get_db)):
         developed_games=[CompanyGameItem(appid=g.appid, name=g.name) for g in company.developed_games],
         published_games=[CompanyGameItem(appid=g.appid, name=g.name) for g in company.published_games],
     )
+
+
+@router.get("/{company_id}/games")
+def get_company_games(company_id: int, kind: str = Query("developer", pattern="^(developer|publisher)$"), page: int = Query(1, ge=1), page_size: int = Query(50, ge=1, le=100), db: Session = Depends(get_db)):
+    company = db.query(Company).filter(Company.id == company_id).first()
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+    games = company.developed_games if kind == "developer" else company.published_games
+    return {"company_id": company.id, "company_name": company.name, "kind": kind, "total": len(games), "page": page, "page_size": page_size, "games": [{"appid": g.appid, "name": g.name, "header_image": g.header_image, "price_final": g.price_final, "release_date": g.release_date} for g in games[(page-1)*page_size:page*page_size]]}

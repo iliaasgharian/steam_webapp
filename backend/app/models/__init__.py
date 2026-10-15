@@ -10,3 +10,5 @@ from app.models.company import Company, game_developers, game_publishers
 from app.models.player_snapshot import PlayerSnapshot
 from app.models.sales_chart import SalesChart
 from app.models.user import User, SearchHistory, FavoriteGame, FavoriteGenre
+
+from app.models.price_snapshot import PriceSnapshot

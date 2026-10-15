@@ -21,6 +21,8 @@ function route(){
   else if (parts[0] === "panel") renderAccountPanel();
   else if (parts[0] === "game" && parts[1]) renderDetail(parts[1]);
   else if (["popular","top-week","top-month","wishlisted","free-games","bundles","upcoming"].includes(parts[0])) renderCollection(parts[0]);
+  else if (parts[0] === "developers" && parts[1]) renderCompanyGames(decodeURIComponent(parts.slice(1).join("/")), "developer");
+  else if (parts[0] === "publishers" && parts[1]) renderCompanyGames(decodeURIComponent(parts.slice(1).join("/")), "publisher");
   else if (parts[0] === "developers") renderPeoplePage("Developers", DEVELOPERS, "STUDIOS");
   else if (parts[0] === "publishers") renderPeoplePage("Publishers", PUBLISHERS, "PUBLISHERS");
   else if (parts[0] === "tags") renderTagsPage();

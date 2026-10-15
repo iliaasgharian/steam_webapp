@@ -37,3 +37,14 @@
   .contact-info-row svg { color:var(--accent); flex:none; margin-top:2px; }
   .contact-info-row b { display:block; font-size:13px; }
   .contact-info-row span { font-size:12.5px; color:var(--text-dim); }
+
+
+/* Developer/publisher portfolios and price history tab */
+.company-game-list{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+.company-game-row{display:flex;align-items:center;gap:18px;min-height:92px;padding:12px 16px;border:1px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text);text-decoration:none;transition:border-color .18s,transform .18s,background .18s}
+.company-game-row:hover{border-color:var(--accent);transform:translateX(3px);background:var(--surface-2,var(--surface))}
+.company-game-art{width:160px;height:68px;flex:0 0 160px;background-size:cover;background-position:center;border-radius:8px;background-color:var(--surface-2)}
+.company-game-info{min-width:0;flex:1}.company-game-info h3{margin:0 0 6px;font-size:16px}.company-game-info p{margin:0;color:var(--muted);font-size:13px}.company-game-price{display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:85px}.company-game-price small{color:var(--success,var(--accent));font-weight:700}.company-game-arrow{color:var(--accent);font-size:20px}.detail-devpub a,.company-inline-link{color:var(--accent);text-decoration:none}.detail-devpub a:hover,.company-inline-link:hover{text-decoration:underline}.genre-filter-dropdown{margin-bottom:10px}.genre-filter-options{max-height:260px;overflow:auto}.price-history-note{font-size:12px;color:var(--muted);margin-top:12px}
+@media(max-width:600px){.company-game-row{gap:10px;padding:10px}.company-game-art{width:92px;height:60px;flex-basis:92px}.company-game-info h3{font-size:13px}.company-game-price{min-width:60px;font-size:12px}.company-game-arrow{display:none}}
+
+.steam-price-table-wrap{overflow-x:auto;max-width:100%;border:1px solid var(--border);border-radius:10px}.steam-price-table{width:100%;border-collapse:collapse;min-width:650px;text-align:left;font-size:13px}.steam-price-table th,.steam-price-table td{padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap}.steam-price-table th{color:var(--muted);font-weight:650;background:var(--surface-2,var(--surface))}.steam-price-table tbody tr:hover{background:var(--surface-2,var(--surface))}.price-country-flag{display:inline-block;margin-right:8px}.price-discount{display:inline-block;background:#294b14;color:#8fdf36;padding:2px 5px;border-radius:4px;margin-right:5px;font-size:11px}

@@ -54,7 +54,7 @@ function renderPeoplePage(title,people,k){
       </div>
       <div class="hybrid-section-label reveal"><div><span>${publisher?'PUBLISHING NETWORK':'STUDIO DIRECTORY'}</span><h2>Explore the ${publisher?'publishers':'developers'}</h2></div><span>Curated prototype profiles</span></div>
       <div class="person-grid hybrid-people-grid reveal">
-        ${people.map((p,i)=>{const count=2+(i%3);const color=colors[i%colors.length];return `<a class="person-card hybrid-person-card" href="#/browse" data-person-filter="${publisher?'publisher':'developer'}" data-person-name="${p.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" style="--person-color:${color}">
+        ${people.map((p,i)=>{const count=2+(i%3);const color=colors[i%colors.length];return `<a class="person-card hybrid-person-card" href="#/${publisher?'publishers':'developers'}/${encodeURIComponent(p)}" style="--person-color:${color}">
           <div class="person-avatar" style="color:${color};border-color:${color}55">${p.split(' ').map(x=>x[0]).join('').slice(0,2)}</div>
           <h3>${p}</h3><p>${publisher?'Publisher profile':'Independent development studio'} · ${count} featured games</p>
           <div class="person-meta"><span class="person-pill">${publisher?'Publishing':'Development'}</span><span class="person-pill">${count} games</span></div>
@@ -62,6 +62,15 @@ function renderPeoplePage(title,people,k){
         </a>`}).join('')}
       </div>
     </div>`;
-  view.querySelectorAll('[data-person-filter]').forEach(card=>card.addEventListener('click',()=>localStorage.setItem('playbase-directory-filter',JSON.stringify({type:card.dataset.personFilter,value:card.dataset.personName}))));
+  armReveals();
+}
+
+
+/* Company portfolio pages: horizontal game rows in the site's existing theme. */
+function renderCompanyGames(name, kind){
+  const publisher = kind === "publisher";
+  const games = GAMES.filter(g => (publisher ? g.publisher : g.developer) === name);
+  const safe = String(name).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  view.innerHTML = `<div class="page section-tight company-portfolio-page"><div class="page-hero reveal"><span class="k">${publisher?"PUBLISHER PORTFOLIO":"DEVELOPER PORTFOLIO"}</span><h1>${safe}</h1><p>${games.length} ${games.length===1?"game":"games"} in the Playbase catalog</p></div><div class="company-game-list reveal">${games.length ? games.map(g=>`<a class="company-game-row" href="#/game/${g.id}"><div class="company-game-art" style="background-image:${gameBg(g)}"></div><div class="company-game-info"><h3>${g.name}</h3><p>${(g.genres||[]).slice(0,3).join(" · ")}</p></div><div class="company-game-price">${g.discount?`<small>-${g.discount}%</small>`:""}<b>${money(g.price*(1-(g.discount||0)/100))}</b></div><span class="company-game-arrow">→</span></a>`).join("") : `<div class="collection-empty">No games found for this ${kind} in the current dataset.</div>`}</div></div>`;
   armReveals();
 }
