@@ -48,3 +48,42 @@
 @media(max-width:600px){.company-game-row{gap:10px;padding:10px}.company-game-art{width:92px;height:60px;flex-basis:92px}.company-game-info h3{font-size:13px}.company-game-price{min-width:60px;font-size:12px}.company-game-arrow{display:none}}
 
 .steam-price-table-wrap{overflow-x:auto;max-width:100%;border:1px solid var(--border);border-radius:10px}.steam-price-table{width:100%;border-collapse:collapse;min-width:650px;text-align:left;font-size:13px}.steam-price-table th,.steam-price-table td{padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap}.steam-price-table th{color:var(--muted);font-weight:650;background:var(--surface-2,var(--surface))}.steam-price-table tbody tr:hover{background:var(--surface-2,var(--surface))}.price-country-flag{display:inline-block;margin-right:8px}.price-discount{display:inline-block;background:#294b14;color:#8fdf36;padding:2px 5px;border-radius:4px;margin-right:5px;font-size:11px}
+
+
+/* Steam price history: fit the available width without horizontal scrolling */
+.price-history-panel,
+.price-history-card,
+.steam-price-table-wrap { width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
+.steam-price-table-wrap { overflow-x:hidden; }
+.steam-price-table { width:100%; min-width:0; table-layout:fixed; font-size:clamp(10px, 1.05vw, 13px); }
+.steam-price-table th,
+.steam-price-table td { padding:9px 8px; white-space:normal; overflow-wrap:anywhere; vertical-align:middle; }
+.steam-price-table th:nth-child(1), .steam-price-table td:nth-child(1) { width:29%; }
+.steam-price-table th:nth-child(2), .steam-price-table td:nth-child(2) { width:25%; }
+.steam-price-table th:nth-child(3), .steam-price-table td:nth-child(3) { width:19%; }
+.steam-price-table th:nth-child(4), .steam-price-table td:nth-child(4) { width:27%; }
+.price-country-cell { display:flex; align-items:center; gap:7px; min-width:0; }
+.price-country-flag { flex:0 0 20px; width:20px; height:16px; display:inline-flex; align-items:center; justify-content:center; margin:0; font-size:16px; line-height:1; }
+.price-country-cell > span:last-child { min-width:0; }
+.steam-price-table td .price-discount { margin:0 4px 2px 0; }
+.steam-price-table td small { font-size:10px; }
+.overview-pulse-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:18px 0; }
+.overview-pulse-stats > div { min-width:0; padding:13px; border:1px solid var(--border); border-radius:9px; background:var(--surface); }
+.overview-pulse-stats span { display:block; color:var(--text-faint); font-size:11px; margin-bottom:7px; }
+.overview-pulse-stats b { font-size:18px; overflow-wrap:anywhere; }
+.overview-pulse-note { display:flex; align-items:center; gap:8px; color:var(--text-faint); font-size:11px; }
+.pulse-live-dot { width:7px; height:7px; border-radius:50%; background:var(--good); display:inline-block; flex:0 0 7px; }
+@media (max-width:700px) {
+ .steam-price-table { font-size:10px; }
+ .steam-price-table th, .steam-price-table td { padding:7px 4px; }
+ .steam-price-table th:nth-child(1), .steam-price-table td:nth-child(1) { width:28%; }
+ .steam-price-table th:nth-child(2), .steam-price-table td:nth-child(2) { width:27%; }
+ .steam-price-table th:nth-child(3), .steam-price-table td:nth-child(3) { width:18%; }
+ .steam-price-table th:nth-child(4), .steam-price-table td:nth-child(4) { width:27%; }
+ .price-country-cell { gap:3px; }
+ .price-country-flag { flex-basis:16px; width:16px; font-size:14px; }
+ .price-discount { font-size:9px !important; padding:2px 3px !important; }
+ .overview-pulse-stats { gap:6px; }
+ .overview-pulse-stats > div { padding:9px 7px; }
+ .overview-pulse-stats b { font-size:14px; }
+}

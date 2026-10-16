@@ -37,3 +37,15 @@
   .req-item { display:flex; gap:8px; font-size:12.5px; padding:7px 0; border-bottom:1px solid var(--border-soft); }
   .req-item b { color:var(--text-dim); min-width:62px; font-weight:600; }
   .similar-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+
+
+/* Requirements layout resilience */
+.req-grid { grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; }
+.req-col { min-width:0; }
+.req-item { min-width:0; align-items:flex-start; overflow-wrap:anywhere; word-break:normal; line-height:1.55; }
+.req-item b { flex:0 0 72px; min-width:0; max-width:38%; overflow-wrap:anywhere; }
+.req-item:not(:has(b)) { display:block; }
+@media (max-width:760px) {
+ .req-grid { grid-template-columns:minmax(0,1fr); gap:18px; }
+ .req-item b { flex-basis:82px; max-width:35%; }
+}
