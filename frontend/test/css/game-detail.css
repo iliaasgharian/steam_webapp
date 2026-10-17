@@ -128,3 +128,19 @@
   .price-country-flag { flex-basis:16px; width:16px; height:12px; }
   .price-country-flag img { width:16px; height:11px; }
 }
+
+/* Clear row hover feedback for the Steam price history table */
+[data-panel="prices"] .steam-price-table tbody tr {
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+[data-panel="prices"] .steam-price-table tbody tr:hover > td {
+  background-color: #dcefe7 !important;
+  color: #172b24;
+}
+[data-panel="prices"] .steam-price-table tbody tr:hover > td .price-country-flag,
+[data-panel="prices"] .steam-price-table tbody tr:hover > td .price-discount {
+  filter: none;
+}
+[data-panel="prices"] .steam-price-table tbody tr:hover > td:first-child {
+  box-shadow: inset 3px 0 0 #18a879;
+}
