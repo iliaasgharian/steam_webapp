@@ -25,6 +25,21 @@ function gameBg(g, kind = "cover"){
   }
   return L.map(u => `url(${u}) center/cover no-repeat`).join(", ");
 }
+// Draw a big list in pages (48 at a time + a "Show more" button). Building 300 tiles at once means ~15,000 DOM nodes and a slow page.
+function pagedTiles(grid, list, tileFn = gameTile, step = 48, emptyHTML = '<div class="collection-empty">No games match these filters.</div>'){
+  const old = grid.nextElementSibling; if (old && old.classList.contains('show-more-wrap')) old.remove();
+  if (!list.length){ grid.innerHTML = emptyHTML; return; }
+  grid.innerHTML = ''; let shown = 0;
+  const wrap = document.createElement('div'); wrap.className = 'show-more-wrap'; grid.after(wrap);
+  const next = () => {
+    grid.insertAdjacentHTML('beforeend', list.slice(shown, shown + step).map(g => tileFn(g)).join(''));
+    shown = Math.min(list.length, shown + step);
+    wrap.innerHTML = shown < list.length ? `<button class="btn-ghost show-more" type="button">Show more (${list.length - shown} left)</button>` : '';
+    const btn = wrap.querySelector('button'); if (btn) btn.onclick = next;
+    if (typeof armReveals === 'function') armReveals();
+  };
+  next();
+}
 function tileArt(g,h=100){
   const c1 = gc((g.genres||[])[0]);
   const primary = g.image || (g.appid ? steamUrls(g.appid, "header.jpg")[0] : `images/games/${g.id}.svg`);

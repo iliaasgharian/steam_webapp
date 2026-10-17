@@ -49,8 +49,8 @@ function mixGames(A, B, variant = 0){
 
 // Minimal tile for the picker: image + name only (no link to the game, no hover panel, no wishlist).
 function mixPickTile(g, current){
-  const art = `${gameBg(g)}, linear-gradient(135deg, ${gc(g.genres[0])}, ${gc(g.genres[0])}55)`;
-  return `<a class="mix-pick-tile${current ? ' is-current' : ''}" href="#/mixer" data-pick-id="${g.id}"><div class="mix-pick-art" style="background:${art}"></div><div class="mix-pick-name">${g.name}</div></a>`;
+  const src = g.image || (g.appid ? steamUrls(g.appid, "header.jpg")[0] : `images/games/${g.id}.svg`);
+  return `<a class="mix-pick-tile${current ? ' is-current' : ''}" href="#/mixer" data-pick-id="${g.id}"><div class="mix-pick-art" style="background:linear-gradient(135deg, ${gc(g.genres[0])}, ${gc(g.genres[0])}55)"><img src="${escapeHTML(src)}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div><div class="mix-pick-name">${escapeHTML(g.name)}</div></a>`;
 }
 
 /* ---- Picker page: #/mixer/pick/a  or  #/mixer/pick/b  — same filters as "All games" ---- */

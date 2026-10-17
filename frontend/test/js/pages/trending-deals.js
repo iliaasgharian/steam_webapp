@@ -9,9 +9,10 @@ function renderTrending(){
       <p>Ranked by 24-hour change in concurrent players.</p>
     </div>
     <div class="page section-tight reveal">
-      <div class="grid">${sorted.map(gameTile).join("")}</div>
+      <div class="grid" id="trendGrid"></div>
     </div>
   `;
+  pagedTiles(document.getElementById("trendGrid"), sorted);
 }
 
 /* ================= DEALS ================= */
@@ -23,7 +24,8 @@ function renderDeals(){
       <p>Every discounted game we're tracking right now.</p>
     </div>
     <div class="page section-tight reveal">
-      <div class="grid">${deals.map(gameTile).join("")}</div>
+      <div class="grid" id="dealsGrid"></div>
     </div>
   `;
+  pagedTiles(document.getElementById("dealsGrid"), deals);
 }

@@ -109,7 +109,7 @@ function renderCatalog(opts){
   function renderResults(){
     const list=filterList(applied);
     resultCount.textContent=totalText(list.length);
-    grid.innerHTML=list.length?list.map(g=>(opts.tile||gameTile)(g)).join(''):`<div class="collection-empty">No games match these filters.</div>`;
+    pagedTiles(grid, list, opts.tile || gameTile);
     const chips=[];
     applied.genres.forEach(x=>chips.push(x)); applied.features.forEach(x=>chips.push(x)); applied.tags.forEach(x=>chips.push(x)); applied.developers.forEach(x=>chips.push(x)); applied.publishers.forEach(x=>chips.push(x));
     if(applied.from)chips.push(`From ${applied.from}`); if(applied.to)chips.push(`To ${applied.to}`); if(applied.rating)chips.push(`Rating ≥ ${applied.rating}%`);

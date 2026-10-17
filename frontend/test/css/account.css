@@ -218,3 +218,14 @@
 .wishlist-panel-grid .tile.game-tile:focus-within {
   transform: none !important;
 }
+
+/* ---- profile photo ---- */
+.account-avatar,.panel-avatar,.photo-preview{background-size:cover;background-position:center;overflow:hidden}
+.nav-account-left .account-avatar{width:26px;height:26px;font-size:12px;font-weight:800}
+.panel-avatar{cursor:pointer}
+.photo-row{display:flex;align-items:center;gap:18px;margin:16px 0 24px}
+.photo-preview{flex:0 0 auto;display:grid;place-items:center;width:84px;height:84px;border-radius:50%;background:var(--accent);color:#fff;font-size:32px;font-weight:800;box-shadow:0 0 0 3px var(--surface),0 0 0 4px var(--border)}
+.photo-btn{display:inline-block;cursor:pointer;padding:9px 16px;font-size:13px}
+.photo-remove{margin-left:10px;background:none;border:0;color:var(--bad);font-weight:600;cursor:pointer}
+.photo-remove[hidden]{display:none}
+.photo-row .settings-feedback{margin:8px 0 0;max-width:34ch}

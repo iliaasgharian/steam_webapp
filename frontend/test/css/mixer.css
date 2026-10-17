@@ -43,5 +43,8 @@ a.mx-slot:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(40,50,80,
 .mix-pick-tile{display:block;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s}
 .mix-pick-tile:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(40,50,80,.14);border-color:var(--accent)}
 .mix-pick-tile.is-current{outline:2px solid var(--accent);outline-offset:-2px}
-.mix-pick-art{aspect-ratio:16/9}
+.mix-pick-art{aspect-ratio:16/9;overflow:hidden}
+.mix-pick-art img{width:100%;height:100%;object-fit:cover;display:block}
 .mix-pick-name{padding:11px 13px;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.show-more-wrap{display:flex;justify-content:center;margin:26px 0 8px}
