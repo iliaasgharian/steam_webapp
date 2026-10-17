@@ -36,7 +36,7 @@
     font-size:13.5px; font-weight:500; color: var(--text-dim);
   }
   .nav-link:hover, .nav-link.active { color: var(--text); background: var(--surface-2); }
-  .nav-link svg.chev { transition: transform .15s ease; opacity:.7; }
+  .nav-link svg.chev { display:inline-block; transform-box:fill-box; transform-origin:50% 50%; transition:transform .15s ease; opacity:.7; }
   .nav-item-wrap:hover .nav-link svg.chev { transform: rotate(180deg); }
   .nav-item-wrap { position:relative; }
   .dropdown {
