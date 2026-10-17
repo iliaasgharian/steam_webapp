@@ -204,3 +204,17 @@
    hovered wrapper itself must be lifted above its siblings. */
 .tile-wrap:hover,
 .tile-wrap:focus-within{z-index:60;}
+
+/* Account panel: keep recently viewed and wishlist cards compact on hover. */
+.wishlist-panel-grid .tile-hover-panel,
+.wishlist-panel-grid .tile.game-tile:hover .tile-hover-panel,
+.wishlist-panel-grid .tile.game-tile:focus-within .tile-hover-panel {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+.wishlist-panel-grid .tile.game-tile:hover,
+.wishlist-panel-grid .tile.game-tile:focus-within {
+  transform: none !important;
+}
