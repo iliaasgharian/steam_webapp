@@ -109,3 +109,22 @@
   .req-item { gap:12px; padding:11px 0; font-size:12.5px; }
   .req-item b { flex-basis:76px; width:76px; }
 }
+
+
+/* Final price-history layout overrides: make the table span the whole card. */
+[data-panel="prices"] { width:100%; min-width:0; }
+[data-panel="prices"] .price-history-card { display:block; width:100%; max-width:none; min-width:0; }
+[data-panel="prices"] .price-regions { display:block !important; width:100%; max-width:none; min-width:0; }
+[data-panel="prices"] .steam-price-table-wrap { display:block; width:100%; max-width:none; overflow-x:hidden; }
+[data-panel="prices"] .steam-price-table { width:100%; min-width:0; table-layout:fixed; }
+.price-country-flag { flex:0 0 22px; width:22px; height:16px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; }
+.price-country-flag img { display:block; width:22px; height:15px; object-fit:cover; border-radius:2px; }
+@media (max-width:560px) {
+  [data-panel="prices"] .steam-price-table th, [data-panel="prices"] .steam-price-table td { padding:7px 3px; font-size:9.5px; }
+  [data-panel="prices"] .steam-price-table th:first-child, [data-panel="prices"] .steam-price-table td:first-child { width:31%; }
+  [data-panel="prices"] .steam-price-table th:nth-child(2), [data-panel="prices"] .steam-price-table td:nth-child(2) { width:23%; }
+  [data-panel="prices"] .steam-price-table th:nth-child(3), [data-panel="prices"] .steam-price-table td:nth-child(3) { width:20%; }
+  [data-panel="prices"] .steam-price-table th:nth-child(4), [data-panel="prices"] .steam-price-table td:nth-child(4) { width:26%; }
+  .price-country-flag { flex-basis:16px; width:16px; height:12px; }
+  .price-country-flag img { width:16px; height:11px; }
+}

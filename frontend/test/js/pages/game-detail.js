@@ -6,7 +6,7 @@ const REGIONAL_PRICES=[
 ];
 function regionalPriceHTML(g){
   const usd=(g.price||0)/100;
-  const flag=iso=>String.fromCodePoint(...iso.toUpperCase().split('').map(c=>127397+c.charCodeAt(0)));
+  const flag=iso=>`<img src="https://flagcdn.com/w40/${iso.toLowerCase()}.png" srcset="https://flagcdn.com/w80/${iso.toLowerCase()}.png 2x" alt="${iso} flag" loading="lazy" decoding="async" onerror="this.style.display='none';this.insertAdjacentText('afterend','${iso}')">`;
   const rows=REGIONAL_PRICES.map(([iso,country,currency,symbol,rate])=>{
     const amount=usd*rate;
     const integer=['JPY','KRW','IDR','HUF','COP','CLP','ARS','INR','UAH','TRY','THB','TWD','CZK','PLN','RON'].includes(currency);
