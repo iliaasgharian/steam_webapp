@@ -144,3 +144,23 @@
 [data-panel="prices"] .steam-price-table tbody tr:hover > td:first-child {
   box-shadow: inset 3px 0 0 #18a879;
 }
+
+/* ---- screenshots: clickable thumbnails + lightbox ---- */
+button.screenshot-card{padding:0;cursor:zoom-in;font:inherit;display:block;width:100%}
+button.screenshot-card:hover{transform:scale(1.015);border-color:var(--accent);box-shadow:0 8px 22px rgba(40,50,80,.18)}
+button.screenshot-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.screenshot-grid.few{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.screenshot-grid.few .screenshot-card,.screenshot-grid.few .screenshot-card:first-child{height:200px;grid-row:auto;grid-column:auto}
+body.lb-open{overflow:hidden}
+.lightbox{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:rgba(12,16,28,.9);animation:lbFade .18s ease}
+.lightbox[hidden]{display:none}
+.lb-img{max-width:92vw;max-height:86vh;border-radius:10px;box-shadow:0 20px 70px rgba(0,0,0,.55);background:#10131c;object-fit:contain;cursor:default}
+.lb-close,.lb-nav{position:absolute;border:0;color:#fff;background:rgba(255,255,255,.14);cursor:pointer;line-height:1;border-radius:50%;transition:background .15s}
+.lb-close:hover,.lb-nav:hover{background:rgba(255,255,255,.28)}
+.lb-close{top:18px;right:20px;width:42px;height:42px;font-size:28px}
+.lb-nav{top:50%;transform:translateY(-50%);width:48px;height:48px;font-size:34px;padding-bottom:4px}
+.lb-prev{left:20px}.lb-next{right:20px}
+.lightbox.single .lb-nav{display:none}
+.lb-count{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(255,255,255,.14);padding:4px 12px;border-radius:999px;font-size:12px}
+@keyframes lbFade{from{opacity:0}to{opacity:1}}
+@media(max-width:600px){.lb-nav{width:40px;height:40px;font-size:28px}.lb-prev{left:8px}.lb-next{right:8px}.lb-close{top:10px;right:10px}}
