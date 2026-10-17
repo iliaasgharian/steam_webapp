@@ -49,3 +49,63 @@
  .req-grid { grid-template-columns:minmax(0,1fr); gap:18px; }
  .req-item b { flex-basis:82px; max-width:35%; }
 }
+
+/* Price history: use the full available width without horizontal scrolling */
+.price-history-panel,
+.price-history-card,
+.price-regions,
+.steam-price-table-wrap { width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
+.price-history-card { padding:clamp(16px,2.2vw,28px); overflow:hidden; }
+.price-history-card > h3 { margin:0 0 8px; }
+.price-history-card > .muted-note { margin:0 0 18px; line-height:1.6; }
+.steam-price-table-wrap { overflow-x:hidden; }
+.steam-price-table { width:100%; max-width:100%; border-collapse:collapse; table-layout:fixed; }
+.steam-price-table th,
+.steam-price-table td { box-sizing:border-box; padding:11px 10px; text-align:left; vertical-align:middle; overflow-wrap:anywhere; word-break:normal; }
+.steam-price-table th { font-size:clamp(10px,1vw,12px); line-height:1.35; white-space:normal; }
+.steam-price-table td { font-size:clamp(10px,1.05vw,13px); line-height:1.4; }
+.steam-price-table th:first-child,
+.steam-price-table td:first-child { width:31%; }
+.steam-price-table th:nth-child(2),
+.steam-price-table td:nth-child(2) { width:23%; }
+.steam-price-table th:nth-child(3),
+.steam-price-table td:nth-child(3) { width:20%; }
+.steam-price-table th:nth-child(4),
+.steam-price-table td:nth-child(4) { width:26%; }
+.price-country-cell { display:flex; align-items:center; gap:8px; min-width:0; }
+.price-country-flag { flex:0 0 22px; width:22px; height:16px; display:inline-flex; align-items:center; justify-content:center; font-size:17px; line-height:1; }
+.price-country-cell > span:last-child { min-width:0; overflow-wrap:anywhere; }
+
+/* Requirements: distinct cards, comfortable spacing, and readable long specs */
+[data-panel="requirements"] { min-width:0; }
+.req-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; align-items:stretch; }
+.req-col { min-width:0; padding:22px 24px; border:1px solid var(--border); border-radius:12px; background:var(--surface); box-shadow:0 5px 18px rgba(0,0,0,.045); }
+.req-col h3 { display:flex; align-items:center; gap:9px; margin:0 0 18px; padding:0 0 13px; border-bottom:1px solid var(--border-soft); color:var(--text); font-size:15px; font-weight:700; }
+.req-col:first-child h3::before { content:'●'; color:var(--accent); font-size:10px; }
+.req-col:last-child h3::before { content:'✦'; color:var(--good); font-size:14px; }
+.req-item { display:flex; align-items:flex-start; gap:14px; padding:12px 2px; min-width:0; border-bottom:1px solid var(--border-soft); color:var(--text-dim); font-size:13px; line-height:1.65; overflow-wrap:anywhere; }
+.req-item:last-child { border-bottom:0; padding-bottom:2px; }
+.req-item b { flex:0 0 82px; width:82px; max-width:none; color:var(--text); font-weight:650; }
+.req-item > * { min-width:0; }
+@media (max-width:900px) {
+  .steam-price-table th, .steam-price-table td { padding:9px 6px; }
+  .price-country-cell { gap:5px; }
+  .price-country-flag { flex-basis:19px; width:19px; font-size:15px; }
+  .req-grid { gap:14px; }
+  .req-col { padding:18px; }
+  .req-item { gap:9px; }
+  .req-item b { flex-basis:70px; width:70px; }
+}
+@media (max-width:560px) {
+  .steam-price-table th, .steam-price-table td { padding:8px 4px; font-size:10px; }
+  .steam-price-table th:first-child, .steam-price-table td:first-child { width:29%; }
+  .steam-price-table th:nth-child(2), .steam-price-table td:nth-child(2) { width:24%; }
+  .steam-price-table th:nth-child(3), .steam-price-table td:nth-child(3) { width:19%; }
+  .steam-price-table th:nth-child(4), .steam-price-table td:nth-child(4) { width:28%; }
+  .price-country-cell { align-items:flex-start; gap:4px; }
+  .price-country-flag { flex-basis:16px; width:16px; font-size:13px; }
+  .req-grid { grid-template-columns:minmax(0,1fr); gap:14px; }
+  .req-col { padding:18px 16px; }
+  .req-item { gap:12px; padding:11px 0; font-size:12.5px; }
+  .req-item b { flex-basis:76px; width:76px; }
+}
