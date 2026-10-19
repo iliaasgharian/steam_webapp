@@ -62,7 +62,7 @@ function handleWishlistClick(event){
 document.addEventListener('click',handleWishlistClick);
 function syncAccountButton(){
   const user=getPlaybaseUser(), btn=document.getElementById('accountCta'), mobile=document.getElementById('mobileAccountLink');
-  if(btn){btn.href=user?'#/panel':'#/login';btn.innerHTML=user?`<span class="account-avatar"${avatarPhotoStyle(user)}>${user.photo?'':avatarLetter(user)}</span> ${escapeHTML(shortName(user))}`:'Log in <span>↗</span>';}
+  if(btn){btn.href=user?'#/panel':'#/login';btn.innerHTML=user?`<span class="account-avatar"${avatarPhotoStyle(user)}>${user.photo?'':avatarLetter(user)}</span>`:'Log in';}
   if(mobile){mobile.href=user?'#/panel':'#/login';mobile.innerHTML=`<span class="mobile-label"><span class="mi">◉</span>${user?'My account':'Log in / Account'}</span>`;}
 }
 function renderLogin(){

@@ -65,3 +65,7 @@
   }
   .cta-band h2 { font-size:26px; margin-bottom:10px; }
   .cta-band p { color:var(--text-dim); font-size:13.5px; margin-bottom:22px; }
+
+/* Featured Game Mixer CTA */
+.mixer-hero-cta{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;max-width:680px;margin:-28px auto 42px;padding:16px 18px;border:1px solid rgba(111,79,240,.28);border-radius:16px;background:linear-gradient(135deg,rgba(111,79,240,.12),rgba(15,163,122,.08));text-align:left;text-decoration:none;color:var(--text);box-shadow:0 14px 40px rgba(60,55,110,.08);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}.mixer-hero-cta:hover{transform:translateY(-3px);box-shadow:0 18px 44px rgba(60,55,110,.14);border-color:var(--accent)}.mixer-hero-icon{display:grid;place-items:center;width:46px;height:46px;border-radius:13px;background:var(--accent);color:#fff;font-size:24px}.mixer-hero-cta b{display:block;font-size:15px}.mixer-hero-cta small{display:block;color:var(--text-dim);font-size:11px;margin-top:3px}.mixer-hero-cta strong{color:var(--accent);font-size:12px;white-space:nowrap}
+@media(max-width:600px){.mixer-hero-cta{grid-template-columns:auto 1fr;margin:-10px 16px 34px}.mixer-hero-cta strong{display:none}}

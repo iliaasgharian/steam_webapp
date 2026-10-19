@@ -229,3 +229,6 @@
 .photo-remove{margin-left:10px;background:none;border:0;color:var(--bad);font-weight:600;cursor:pointer}
 .photo-remove[hidden]{display:none}
 .photo-row .settings-feedback{margin:8px 0 0;max-width:34ch}
+
+/* Minimal navbar account control */
+.nav-account-left{background:transparent!important;border:0!important;box-shadow:none!important;color:var(--text-dim)!important;padding-left:6px!important;padding-right:6px!important}.nav-account-left:hover{background:transparent!important;color:var(--text)!important}.nav-account-left .account-avatar{background:transparent;color:var(--text);border:1px solid var(--border);box-shadow:none}.nav-account-left .account-avatar{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;font-size:11px}.nav-account-left .account-avatar[style]{border-color:transparent}
