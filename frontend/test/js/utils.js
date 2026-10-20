@@ -1,7 +1,7 @@
 // Utilities: formatters, game tiles, charts, helpers
 
 /* ================= Utilities ================= */
-function money(c){ return "$" + (c/100).toFixed(2); }
+function money(c){ return c>0 ? "$" + (c/100).toFixed(2) : "Free to Play"; }
 function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
 function chips(arr){ return arr.map(g=>`<span class="chip">${g}</span>`).join(""); }
 // Game images. gameBg(g) builds a CSS background made of several layers; the first layer that loads is shown,
