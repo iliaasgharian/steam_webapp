@@ -173,3 +173,19 @@ body.lb-open{overflow:hidden}
 .detail-content-card { padding-top:24px; }
 @media (max-width:980px){ .detail-hero { min-height:280px; } }
 @media (max-width:600px){ .detail-hero { min-height:240px; padding:22px 18px; } }
+
+/* Tags on the game page: neutral by default, only the key tags (is-key) keep their colour.
+   Colour comes back on hover so the tag's category is still discoverable. */
+.detail-content-card .tag-chip:not(.is-key) {
+  color: var(--text-dim);
+  border-color: var(--border);
+  background: var(--surface-2);
+  box-shadow: none;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.detail-content-card .tag-chip:not(.is-key) .tag-chip-icon { display: none; }
+.detail-content-card .tag-chip:not(.is-key):hover {
+  color: var(--tag-color);
+  border-color: var(--tag-color);
+  background: color-mix(in srgb, var(--tag-color) 8%, transparent);
+}

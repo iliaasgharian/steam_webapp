@@ -63,6 +63,7 @@ const GAME_FEATURES={
 };
 function featuresForGame(g){return GAME_FEATURES[g.id]||[];}
 function tagsForGame(g){return [...new Set([...(g.genres||[]),...(GAME_TAG_OVERRIDES[g.id]||[])])]}
-function tagChip(tag){const m=TAG_META[tag]||["🏷️","#6B7384"];return `<span class="tag-chip" style="--tag-color:${m[1]}"><span class="tag-chip-icon">${m[0]}</span>${tag}</span>`;}
-function tagChips(arr){return arr.map(tagChip).join("");}
+function tagChip(tag,key){const m=TAG_META[tag]||["🏷️","#6B7384"];return `<span class="tag-chip${key?" is-key":""}" style="--tag-color:${m[1]}"><span class="tag-chip-icon">${m[0]}</span>${tag}</span>`;}
+// keyCount = how many leading tags keep their colour (the important ones); the rest render neutral.
+function tagChips(arr,keyCount=0){return arr.map((t,i)=>tagChip(t,i<keyCount)).join("");}
 const DLC=["Echoes of the Deep","Ashfall Arsenal","The Lost Coast","Nightfall Pack"]; const COMMENTS=[{u:"MiraK",t:"2 days ago",x:"The combat loop feels great and the analytics make it easy to see how active the game still is."},{u:"PixelPilot",t:"5 days ago",x:"Really liked the atmosphere. The player trend is also surprisingly steady."},{u:"Rook",t:"1 week ago",x:"A solid recommendation if you like short repeatable runs and build variety."}];
