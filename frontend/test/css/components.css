@@ -24,3 +24,14 @@
   .page-hero .k { font-size:11.5px; color:var(--accent); font-weight:600; letter-spacing:.02em; margin-bottom:8px; display:block; }
   .page-hero h1 { font-size:30px; font-weight:700; margin-bottom:8px; }
   .page-hero p { color:var(--text-dim); font-size:14px; max-width:60ch; margin:0; }
+
+/* ---- Accessibility additions ---- */
+/* Links styled as buttons (e.g. "Browse the catalog") */
+a.btn-primary, a.btn-ghost { display:inline-flex; align-items:center; justify-content:center; text-align:center; line-height:1.2; }
+/* Search results are real links now: show keyboard focus like hover */
+.ac-row { color:inherit; text-decoration:none; }
+.ac-row:focus-visible { background:var(--surface-2); outline:2px solid var(--accent); outline-offset:-2px; }
+/* Game cards: keyboard focus reveals the same details panel as hover */
+.game-tile:focus-visible .tile-hover-panel { opacity:1; transform:translateY(0) scale(1); }
+/* Tabs: visible focus ring (they are keyboard-operable now) */
+.tab:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }

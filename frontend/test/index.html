@@ -81,20 +81,20 @@
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       </button>
       <button class="nav-cta" id="mixerCta">Try the mixer</button>
-      <button class="icon-btn burger" aria-label="Menu">
+      <button class="icon-btn burger" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
       </button>
     </div>
   </div>
 </nav>
-<div class="mobile-menu" id="mobileMenu">
+<div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile menu">
   <div class="mobile-menu-head"><div class="mobile-menu-title"><span>Play</span>base</div><button class="mobile-close" id="mobileClose" aria-label="Close menu">×</button></div>
   <a class="mobile-link" href="#/"><span class="mobile-label"><span class="mi">⌂</span>Home</span></a>
   <div class="mobile-section-title">Browse</div>
-  <button class="mobile-parent" data-mobile-sub="gamesSub"><span class="mobile-label"><span class="mi">▦</span>Games</span><span>+</span></button>
+  <button class="mobile-parent" aria-expanded="false" data-mobile-sub="gamesSub"><span class="mobile-label"><span class="mi">▦</span>Games</span><span>+</span></button>
   <div class="mobile-sub" id="gamesSub"><a href="#/browse">All Games</a><a href="#/genres">Genres</a><a href="#/deals">Deals</a><a href="#/free-games">Free Games</a><a href="#/bundles">Bundles</a><a href="#/upcoming">Upcoming Games</a></div>
   <a class="mobile-link" href="#/tags"><span class="mobile-label"><span class="mi">🏷️</span>Game Tags</span></a>
-  <button class="mobile-parent" data-mobile-sub="discoverSub"><span class="mobile-label"><span class="mi">✦</span>Discover</span><span>+</span></button>
+  <button class="mobile-parent" aria-expanded="false" data-mobile-sub="discoverSub"><span class="mobile-label"><span class="mi">✦</span>Discover</span><span>+</span></button>
   <div class="mobile-sub" id="discoverSub"><a href="#/popular">Most Popular</a><a href="#/top-week">Top This Week</a><a href="#/top-month">Top This Month</a><a href="#/wishlisted">Most Wishlisted</a></div>
   <a class="mobile-link" href="#/developers"><span class="mobile-label"><span class="mi">◈</span>Developers</span></a>
   <a class="mobile-link" href="#/publishers"><span class="mobile-label"><span class="mi">◆</span>Publishers</span></a>
@@ -109,11 +109,11 @@
 <div class="mobile-backdrop" id="mobileBackdrop"></div>
 <div class="navbar-spacer"></div>
 
-<div class="search-overlay" id="searchOverlay">
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="Search games">
   <div class="search-modal">
     <div class="search-box">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <input id="searchInput" type="text" placeholder="Search games by name…" autocomplete="off">
+      <input id="searchInput" type="text" placeholder="Search games by name…" autocomplete="off" aria-label="Search games by name">
       <span class="kbd">esc</span>
     </div>
     <div class="ac-list" id="acList"></div>
