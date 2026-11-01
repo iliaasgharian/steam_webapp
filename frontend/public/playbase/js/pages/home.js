@@ -1,0 +1,31 @@
+// Home page
+
+/* ================= HOME ================= */
+function renderHome(){
+  view.innerHTML = `
+    <section class="hero">
+      <div class="blob blob-a"></div><div class="blob blob-b"></div>
+      <div class="page hero-inner">
+        <span class="eyebrow"><span class="live-dot"></span> Tracking ${fmt(61204)} games live</span>
+        <h1>Every Steam game,<br>in one <span class="hl">searchable</span> place.</h1>
+        <p>Search the catalog, compare prices, follow player trends and discover what is worth watching next.</p>
+        <div class="hero-actions"><a class="btn-primary" href="#/browse">Browse the catalog</a><button class="btn-ghost hero-search" onclick="document.getElementById('searchBtn').click()">Search a game</button></div>
+        <a class="mixer-hero-cta" href="#/mixer"><span class="mixer-hero-icon">✣</span><span><b>Try Game Mixer</b><small>Pick two games and discover your next perfect match.</small></span><strong>Try it →</strong></a>
+        <div class="hero-stats"><div class="hstat"><div class="n" data-count="61204">0</div><div class="l">Games tracked</div></div><div class="hstat"><div class="n" data-count="1280000">0</div><div class="l">Players online now</div></div><div class="hstat"><div class="n" data-count="430">0</div><div class="l">Snapshots / day</div></div><div class="hstat"><div class="n" data-count="9">0</div><div class="l">Genres indexed</div></div></div>
+      </div>
+    </section>
+
+    <section class="page home-section reveal"><div class="home-grid">
+      <div class="sale-card"><div class="sale-k">NEXT MAJOR SALE · STEAM</div><h3>Winter Sale 2026</h3><p>Steam’s next major seasonal sale runs December 17, 2026 through January 4, 2027. Add games to your wishlist now and get ready for the discounts.</p><div class="countdown" id="saleCountdown"><div class="count-box"><b>--</b><span>Days</span></div><div class="count-box"><b>--</b><span>Hours</span></div><div class="count-box"><b>--</b><span>Minutes</span></div><div class="count-box"><b>--</b><span>Seconds</span></div></div></div>
+      <div class="converter-card"><div class="converter-head"><div><span class="converter-k">QUICK TOOL</span><h3>Currency converter</h3><p>Compare prices in a cleaner, faster way.</p></div><span class="fx-live">● Ready</span></div><div class="converter-row"><div class="fx-field"><label for="fxAmount">Amount</label><input id="fxAmount" type="number" value="19.99" min="0" step="0.01"></div><div class="fx-field"><label for="fxFrom">From</label><select id="fxFrom"><option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option><option>JPY</option></select></div><button class="fx-swap" id="fxSwap" type="button" aria-label="Swap currencies">⇄</button><div class="fx-field"><label for="fxTo">To</label><select id="fxTo"><option>EUR</option><option>USD</option><option>GBP</option><option>CAD</option><option>JPY</option></select></div></div><div class="convert-result" id="fxResult"><span>Converted amount</span><strong>€17.59</strong></div></div>
+    </div></section>
+
+    <section class="page home-section section-accent"><div class="section-head compact reveal"><div><span class="k">DISCOVER</span><h2>Most Popular Games</h2><p class="sub">The titles pulling the most players right now.</p></div><a class="more" href="#/popular">More →</a></div><div class="mini-grid reveal">${POPULAR.map(gameTile).join("")}</div></section>
+    <section class="page home-section"><div class="section-head compact reveal"><div><span class="k">RANKED</span><h2>Top Games of the Week</h2><p class="sub">A quick weekly snapshot of what is getting attention.</p></div><a class="more" href="#/top-week">More →</a></div><div class="mini-grid reveal">${WEEKLY.map((g,i)=>`<div style="position:relative">${gameTile(g)}<span class="rank-badge">#${i+1}</span></div>`).join("")}</div></section>
+    <section class="page home-section"><div class="section-head compact reveal"><div><span class="k">EXPERIMENTAL</span><h2>Most Wishlisted</h2><p class="sub">A prototype ranking based on wishlist activity.</p></div><a class="more" href="#/wishlisted">More →</a></div><div class="mini-grid reveal">${WISHLISTED.map((g,i)=>`<div style="position:relative">${gameTile(g)}<span class="rank-badge">W${i+1}</span></div>`).join("")}</div></section>
+
+    <section class="page section"><div class="section-head reveal"><div><span class="k">HOW IT WORKS</span><h2>From search to insight</h2></div></div><div class="steps reveal"><div class="step"><div class="step-num">01</div><h3>Search or browse</h3><p>Find games by name, genre, price, platform, or discovery list.</p></div><div class="step"><div class="step-num">02</div><h3>Read the signals</h3><p>See player counts, review trends, pricing history and regional differences.</p></div><div class="step"><div class="step-num">03</div><h3>Discover what's next</h3><p>Compare similar games, DLC, tags and upcoming releases.</p></div></div></section>
+    <section class="page section"><div class="cta-band reveal"><h2>Ready to look up a game?</h2><p>No account needed — search the catalog or browse by genre right now.</p><div class="hero-actions" style="margin-bottom:0"><a class="btn-primary" href="#/browse">Browse the catalog</a><button class="btn-ghost" onclick="document.getElementById('searchBtn').click()">Open search</button></div></div></section>`;
+  document.querySelectorAll(".hstat .n").forEach(el=>countUp(el,parseInt(el.dataset.count,10)));
+  startCountdown(); initCurrency();
+}

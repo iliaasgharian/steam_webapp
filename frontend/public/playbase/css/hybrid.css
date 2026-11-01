@@ -1,0 +1,100 @@
+/* Hybrid design system overrides (home, detail, analytics, tags, people pages) */
+
+/* ================= PLAYBASE HYBRID DESIGN SYSTEM ================= */
+:root{
+  --hybrid-bg:#ECEEF2;
+  --hybrid-surface:rgba(255,255,255,.85);
+  --hybrid-surface-strong:#FFFFFF;
+  --hybrid-line:rgba(20,24,40,.075);
+  --hybrid-green:#176B52;
+  --hybrid-green-bright:#0FA37A;
+  --hybrid-blue:#2E7FE0;
+  --hybrid-purple:#6F4FF0;
+  --hybrid-glow:rgba(15,163,122,.13);
+}
+
+/* Brand: interlocking square + circle */
+.wordmark .mark{width:25px;height:25px;overflow:visible}
+.wordmark .mark::before,.wordmark .mark::after{width:17px;height:17px;transform:none;top:4px}
+.wordmark .mark::before{left:0;border-width:2.5px;border-radius:4px;background:rgba(23,107,82,.12)}
+.wordmark .mark::after{right:0;border-width:2.5px;border-radius:50%;background:rgba(15,163,122,.08)}
+
+/* HOME — clean premium */
+.hero{background:radial-gradient(circle at 78% 25%,rgba(15,163,122,.075),transparent 27%),radial-gradient(circle at 15% 55%,rgba(111,79,240,.055),transparent 30%)}
+.home-section .sale-card:hover,.home-section .converter-card:hover{transform:translateY(-4px)}
+.home-section .section-head h2,.home-section .section-head h3{letter-spacing:-.035em}
+
+/* GAME DETAIL — glass gaming */
+.detail-hero{border:1px solid rgba(20,24,40,.10)!important;box-shadow:0 25px 80px rgba(40,50,80,0.144),inset 0 1px 0 rgba(20,24,40,.05);backdrop-filter:blur(12px)}
+.detail-cover{border:1px solid rgba(20,24,40,.10);box-shadow:0 30px 70px rgba(40,50,80,0.160)}
+.detail-content-card{background:linear-gradient(145deg,rgba(14,20,22,.94),rgba(9,13,16,.96));border:1px solid rgba(20,24,40,.075);box-shadow:0 24px 80px rgba(40,50,80,0.106)}
+.detail-content-card .info-card,.detail-content-card .chart-card,.detail-content-card .req-col,.detail-content-card .dlc-card,.detail-content-card .comment-card{background:linear-gradient(145deg,rgba(24,32,34,.72),rgba(14,20,22,.78));border-color:rgba(20,24,40,.075);box-shadow:inset 0 1px 0 rgba(20,24,40,.025)}
+.detail-content-card .info-card:hover,.detail-content-card .chart-card:hover,.detail-content-card .dlc-card:hover{border-color:rgba(15,163,122,.22);transform:translateY(-2px);transition:.25s ease}
+.detail-meta-row .tag-chip{font-size:11.5px;padding:6px 10px;box-shadow:0 5px 18px rgba(40,50,80,0.061)}
+.pulse-card{background:linear-gradient(145deg,rgba(25,35,36,.85),rgba(12,18,20,.92));border-color:rgba(20,24,40,.075);box-shadow:inset 0 1px 0 rgba(20,24,40,.025)}
+.pulse-card:nth-child(1){border-top-color:rgba(217,131,0,.45)}
+.pulse-card:nth-child(2){border-top-color:rgba(15,163,122,.45)}
+.pulse-card:nth-child(3){border-top-color:rgba(230,160,20,.45)}
+.pulse-card:nth-child(4){border-top-color:rgba(111,79,240,.45)}
+.tabs{background:rgba(10,15,17,.75);border:1px solid rgba(20,24,40,.07);padding:5px;border-radius:14px;backdrop-filter:blur(10px);gap:2px}
+.tab{border-radius:9px;padding:9px 15px;margin-right:0;border-bottom:none;font-weight:600;letter-spacing:.01em;cursor:pointer;transition:background .2s ease,color .2s ease,box-shadow .2s ease}
+.tab:hover:not(.active){background:rgba(20,24,40,.045);color:var(--text)}
+.tab.active{background:linear-gradient(135deg,rgba(23,107,82,.72),rgba(15,163,122,.16));color:#fff;box-shadow:0 5px 20px rgba(40,50,80,0.068)}
+
+/* ANALYTICS — professional dashboard */
+.analytics-grid{gap:14px}
+.chart-card{background:linear-gradient(145deg,#111a1c,#0c1214)!important;border-color:rgba(20,24,40,.075)!important;border-radius:16px;box-shadow:0 18px 45px rgba(40,50,80,0.076)}
+.chart-card::before{content:"";display:block;width:28px;height:3px;border-radius:2px;background:var(--hybrid-green-bright);margin-bottom:14px;opacity:.7}
+.chart-title{letter-spacing:-.02em}.chart-sub{color:var(--text-faint)}
+.stat-strip{background:linear-gradient(90deg,rgba(23,107,82,.08),rgba(111,79,240,.04));border-color:rgba(20,24,40,.07)}
+
+/* TAGS — colorful discovery */
+.tag-filter{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(22,28,31,.9),rgba(14,19,21,.95));box-shadow:0 10px 30px rgba(40,50,80,0.046)}
+.tag-filter::after{content:"";position:absolute;inset:auto -30px -45px auto;width:90px;height:90px;border-radius:50%;background:var(--tag-color,rgba(111,79,240,.15));filter:blur(30px);opacity:.13;pointer-events:none}
+.tag-filter.active{border-color:rgba(15,163,122,.55);box-shadow:0 12px 35px rgba(15,163,122,.10)}
+.tag-filter:hover{border-color:rgba(20,24,40,.16)}
+
+/* DEVELOPERS / PUBLISHERS — editorial */
+.hybrid-people-hero{display:grid;grid-template-columns:1.45fr .75fr;gap:18px;align-items:stretch}
+.hybrid-editorial-lead{padding:34px;border:1px solid rgba(20,24,40,.075);border-radius:22px;background:radial-gradient(circle at 85% 15%,rgba(15,163,122,.13),transparent 30%),linear-gradient(145deg,#111a1c,#0b1113);box-shadow:0 25px 70px rgba(40,50,80,0.091)}
+.hybrid-editorial-lead .k{color:var(--hybrid-green-bright)}
+.hybrid-editorial-lead h1{font-size:clamp(38px,5vw,64px);line-height:.95;letter-spacing:-.055em;margin:9px 0 14px}
+.hybrid-editorial-lead p{max-width:650px;color:var(--text-dim);line-height:1.7}
+.hybrid-side-stat{display:flex;flex-direction:column;justify-content:space-between;padding:25px;border:1px solid rgba(20,24,40,.075);border-radius:22px;background:linear-gradient(145deg,#151d20,#0c1214)}
+.hybrid-side-stat strong{font:700 42px var(--font-mono);letter-spacing:-.06em;color:#fff}
+.hybrid-side-stat span{color:var(--text-faint);font-size:12px}
+.hybrid-section-label{display:flex;justify-content:space-between;align-items:end;margin:35px 0 15px}
+.hybrid-section-label h2{font-size:25px;letter-spacing:-.04em}
+.hybrid-section-label span{font:600 10px var(--font-mono);color:var(--text-faint);text-transform:uppercase;letter-spacing:.12em}
+.person-grid.hybrid-people-grid{grid-template-columns:repeat(2,1fr);gap:14px}
+.person-card.hybrid-person-card{position:relative;display:grid;grid-template-columns:64px 1fr auto;grid-template-rows:auto auto auto;gap:4px 16px;align-items:center;min-height:155px;padding:20px 22px;border-radius:18px;background:linear-gradient(145deg,rgba(22,30,32,.95),rgba(11,16,18,.97));border:1px solid rgba(20,24,40,.075);box-shadow:0 15px 45px rgba(40,50,80,0.068);overflow:hidden}
+.person-card.hybrid-person-card::after{content:"";position:absolute;width:150px;height:150px;right:-65px;bottom:-85px;border-radius:50%;background:var(--person-color);filter:blur(45px);opacity:.10;transition:.3s}
+.person-card.hybrid-person-card:hover{transform:translateY(-5px);border-color:rgba(15,163,122,.25);box-shadow:0 24px 55px rgba(40,50,80,0.106)}
+.hybrid-person-card .person-avatar{grid-row:1/4;width:64px;height:64px;border-radius:18px;background:rgba(20,24,40,.035);display:grid;place-items:center;font:700 18px var(--font-mono);border:1px solid;box-shadow:inset 0 1px 0 rgba(20,24,40,.06)}
+.hybrid-person-card h3{font-size:19px;letter-spacing:-.025em}.hybrid-person-card p{font-size:11.5px;color:var(--text-faint);margin:2px 0 8px}.hybrid-person-card .person-meta{display:flex;gap:6px}.hybrid-person-card .person-arrow{grid-column:3;grid-row:1/4;align-self:center;color:var(--hybrid-green-bright);font-size:12px;font-weight:700;white-space:nowrap}
+.hybrid-person-card .person-pill{border-color:rgba(20,24,40,.08);background:rgba(20,24,40,.035)}
+
+/* Buttons / micro-interactions */
+.btn-primary,.btn-ghost,.nav-cta,.mobile-search,.icon-btn,.sort-select{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease,background .2s ease}
+.btn-primary:hover,.nav-cta:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(15,163,122,.12)}
+.btn-ghost:hover{transform:translateY(-2px);border-color:rgba(15,163,122,.35);color:var(--hybrid-green-bright)}
+
+@media(max-width:980px){
+  .hybrid-people-hero{grid-template-columns:1fr}
+  .person-grid.hybrid-people-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .hybrid-editorial-lead{padding:24px;border-radius:18px}
+  .hybrid-editorial-lead h1{font-size:39px}
+  .hybrid-side-stat{min-height:120px}
+  .person-grid.hybrid-people-grid{grid-template-columns:1fr}
+  .person-card.hybrid-person-card{grid-template-columns:54px 1fr;min-height:125px;padding:16px}
+  .hybrid-person-card .person-avatar{width:54px;height:54px}
+  .hybrid-person-card .person-arrow{grid-column:2;grid-row:3;justify-self:start}
+  .hybrid-person-card h3{font-size:17px}
+}
+
+
+  /* Regional prices: two-column desktop/tablet layout, single column only on narrow phones */
+  .price-regions{grid-template-columns:repeat(2,minmax(0,1fr));}
+  @media(max-width:560px){.price-regions{grid-template-columns:1fr;}.region-price{padding:12px;}}

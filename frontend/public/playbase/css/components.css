@@ -1,0 +1,37 @@
+/* Shared components: game tiles/grid and page headers */
+
+  /* ================= GRID / TILES (shared) ================= */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:14px; }
+  .tile { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; display:flex; flex-direction:column; transition:border-color .15s ease, transform .15s ease; }
+  .tile:hover { border-color:#BFC5D1; transform:translateY(-2px); }
+  .tile-art { height:100px; position:relative; display:flex; align-items:flex-end; padding:8px; overflow:hidden; background-color:var(--surface-2); }
+  .tile-art .tile-image { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .tile-art .discount-badge { z-index:1; }
+  .tile-art .discount-badge { position:absolute; top:8px; right:8px; background:var(--good); color:#06251C; font-size:10.5px; font-weight:700; font-family:var(--font-mono); padding:2px 6px; border-radius:4px; }
+  .tile-body { padding:11px 12px 13px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .tile-name { font-size:13.5px; font-weight:600; }
+  .tile-tags { display:flex; gap:5px; flex-wrap:wrap; }
+  .tile-tags .chip { font-size:10px; padding:2px 7px; }
+  .tile-foot { display:flex; align-items:center; justify-content:space-between; margin-top:auto; }
+  .price { font-family:var(--font-mono); font-size:13px; white-space:nowrap; flex-shrink:0; }
+  .price .strike { color:var(--text-faint); text-decoration:line-through; margin-right:6px; font-size:11.5px; }
+  .price .now { color:var(--good); font-weight:600; }
+  .players-mini { display:flex; align-items:center; gap:4px; font-size:11px; color:var(--text-dim); font-family:var(--font-mono); }
+  .players-mini svg { color:var(--text-faint); }
+
+  /* ================= PAGE HEADER (non-home pages) ================= */
+  .page-hero { padding: 46px 0 8px; }
+  .page-hero .k { font-size:11.5px; color:var(--accent); font-weight:600; letter-spacing:.02em; margin-bottom:8px; display:block; }
+  .page-hero h1 { font-size:30px; font-weight:700; margin-bottom:8px; }
+  .page-hero p { color:var(--text-dim); font-size:14px; max-width:60ch; margin:0; }
+
+/* ---- Accessibility additions ---- */
+/* Links styled as buttons (e.g. "Browse the catalog") */
+a.btn-primary, a.btn-ghost { display:inline-flex; align-items:center; justify-content:center; text-align:center; line-height:1.2; }
+/* Search results are real links now: show keyboard focus like hover */
+.ac-row { color:inherit; text-decoration:none; }
+.ac-row:focus-visible { background:var(--surface-2); outline:2px solid var(--accent); outline-offset:-2px; }
+/* Game cards: keyboard focus reveals the same details panel as hover */
+.game-tile:focus-visible .tile-hover-panel { opacity:1; transform:translateY(0) scale(1); }
+/* Tabs: visible focus ring (they are keyboard-operable now) */
+.tab:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }

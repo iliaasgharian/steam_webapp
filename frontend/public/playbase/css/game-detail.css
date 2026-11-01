@@ -1,0 +1,191 @@
+/* Game detail page */
+
+  /* ================= GAME DETAIL ================= */
+  .breadcrumb { font-size:12px; color:var(--text-faint); margin: 40px 0 14px; }
+  .breadcrumb a:hover { color:var(--text-dim); }
+  .detail-hero { border-radius:12px; border:1px solid var(--border); overflow:hidden; position:relative; padding:34px 30px; min-height:210px; display:flex; flex-direction:column; justify-content:flex-end; }
+  .detail-hero::before { content:""; position:absolute; inset:0; background: radial-gradient(circle at 14% 20%, rgba(15,163,122,0.28), transparent 40%), radial-gradient(circle at 90% 85%, rgba(111,79,240,0.30), transparent 45%); }
+  .detail-hero > * { position:relative; }
+  .detail-title { font-family:var(--font-display); font-size:30px; font-weight:700; margin:0 0 6px; }
+  .detail-devpub { font-size:13px; color:var(--text-dim); margin:0 0 14px; }
+  .detail-tags { display:flex; gap:6px; margin-bottom:20px; flex-wrap:wrap; }
+  .detail-cta-row { display:flex; align-items:center; gap:16px; }
+  .buy-block { background:var(--raised); border:1px solid var(--border); border-radius:var(--radius-m); padding:10px 16px; display:flex; align-items:center; gap:12px; }
+  .buy-price .strike { display:block; color:var(--text-faint); text-decoration:line-through; font-size:12px; }
+  .buy-price .now { font-family:var(--font-mono); font-size:19px; font-weight:600; color:var(--good); }
+  .buy-discount { background:var(--good); color:#06251C; font-weight:700; font-size:12px; padding:3px 8px; border-radius:4px; }
+  .plat-icons { display:flex; gap:10px; color:var(--text-dim); }
+  .stat-strip { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-top:18px; }
+  .strip-cell { padding:16px 20px; border-right:1px solid var(--border); background:var(--surface); }
+  .strip-cell:last-child { border-right:none; }
+  .strip-label { font-size:11px; color:var(--text-faint); margin-bottom:6px; }
+  .strip-value { font-family:var(--font-mono); font-size:19px; font-weight:500; display:flex; align-items:center; gap:7px; }
+  .strip-value.good { color:var(--good); }
+  .tabs { display:flex; gap:4px; margin:34px 0 20px; border-bottom:1px solid var(--border-soft); overflow-x:auto; }
+  .tab { padding:10px 4px; margin-right:22px; font-size:13.5px; font-weight:500; color:var(--text-faint); border-bottom:2px solid transparent; white-space:nowrap; }
+  .tab.active { color:var(--text); border-color:var(--accent); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+  .overview-grid { display:grid; grid-template-columns:1.4fr 1fr; gap:30px; }
+  .desc { color:var(--text-dim); font-size:13.5px; line-height:1.7; max-width:62ch; }
+  .facts { display:flex; flex-direction:column; gap:0; border-top:1px solid var(--border-soft); }
+  .fact-row { display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--border-soft); font-size:13px; }
+  .fact-row span:first-child { color:var(--text-faint); }
+  .chart-row { display:grid; grid-template-columns:1.5fr 1fr; gap:18px; }
+  .req-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .req-col h3 { font-size:13px; margin:0 0 12px; color:var(--text-dim); }
+  .req-item { display:flex; gap:8px; font-size:12.5px; padding:7px 0; border-bottom:1px solid var(--border-soft); }
+  .req-item b { color:var(--text-dim); min-width:62px; font-weight:600; }
+  .similar-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+
+
+/* Requirements layout resilience */
+.req-grid { grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; }
+.req-col { min-width:0; }
+.req-item { min-width:0; align-items:flex-start; overflow-wrap:anywhere; word-break:normal; line-height:1.55; }
+.req-item b { flex:0 0 72px; min-width:0; max-width:38%; overflow-wrap:anywhere; }
+.req-item:not(:has(b)) { display:block; }
+@media (max-width:760px) {
+ .req-grid { grid-template-columns:minmax(0,1fr); gap:18px; }
+ .req-item b { flex-basis:82px; max-width:35%; }
+}
+
+/* Price history: use the full available width without horizontal scrolling */
+.price-history-panel,
+.price-history-card,
+.price-regions,
+.steam-price-table-wrap { width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
+.price-history-card { padding:clamp(16px,2.2vw,28px); overflow:hidden; }
+.price-history-card > h3 { margin:0 0 8px; }
+.price-history-card > .muted-note { margin:0 0 18px; line-height:1.6; }
+.steam-price-table-wrap { overflow-x:hidden; }
+.steam-price-table { width:100%; max-width:100%; border-collapse:collapse; table-layout:fixed; }
+.steam-price-table th,
+.steam-price-table td { box-sizing:border-box; padding:11px 10px; text-align:left; vertical-align:middle; overflow-wrap:anywhere; word-break:normal; }
+.steam-price-table th { font-size:clamp(10px,1vw,12px); line-height:1.35; white-space:normal; }
+.steam-price-table td { font-size:clamp(10px,1.05vw,13px); line-height:1.4; }
+.steam-price-table th:first-child,
+.steam-price-table td:first-child { width:31%; }
+.steam-price-table th:nth-child(2),
+.steam-price-table td:nth-child(2) { width:23%; }
+.steam-price-table th:nth-child(3),
+.steam-price-table td:nth-child(3) { width:20%; }
+.steam-price-table th:nth-child(4),
+.steam-price-table td:nth-child(4) { width:26%; }
+.price-country-cell { display:flex; align-items:center; gap:8px; min-width:0; }
+.price-country-flag { flex:0 0 22px; width:22px; height:16px; display:inline-flex; align-items:center; justify-content:center; font-size:17px; line-height:1; }
+.price-country-cell > span:last-child { min-width:0; overflow-wrap:anywhere; }
+
+/* Requirements: distinct cards, comfortable spacing, and readable long specs */
+[data-panel="requirements"] { min-width:0; }
+.req-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; align-items:stretch; }
+.req-col { min-width:0; padding:22px 24px; border:1px solid var(--border); border-radius:12px; background:var(--surface); box-shadow:0 5px 18px rgba(0,0,0,.045); }
+.req-col h3 { display:flex; align-items:center; gap:9px; margin:0 0 18px; padding:0 0 13px; border-bottom:1px solid var(--border-soft); color:var(--text); font-size:15px; font-weight:700; }
+.req-col:first-child h3::before { content:'●'; color:var(--accent); font-size:10px; }
+.req-col:last-child h3::before { content:'✦'; color:var(--good); font-size:14px; }
+.req-item { display:flex; align-items:flex-start; gap:14px; padding:12px 2px; min-width:0; border-bottom:1px solid var(--border-soft); color:var(--text-dim); font-size:13px; line-height:1.65; overflow-wrap:anywhere; }
+.req-item:last-child { border-bottom:0; padding-bottom:2px; }
+.req-item b { flex:0 0 82px; width:82px; max-width:none; color:var(--text); font-weight:650; }
+.req-item > * { min-width:0; }
+@media (max-width:900px) {
+  .steam-price-table th, .steam-price-table td { padding:9px 6px; }
+  .price-country-cell { gap:5px; }
+  .price-country-flag { flex-basis:19px; width:19px; font-size:15px; }
+  .req-grid { gap:14px; }
+  .req-col { padding:18px; }
+  .req-item { gap:9px; }
+  .req-item b { flex-basis:70px; width:70px; }
+}
+@media (max-width:560px) {
+  .steam-price-table th, .steam-price-table td { padding:8px 4px; font-size:10px; }
+  .steam-price-table th:first-child, .steam-price-table td:first-child { width:29%; }
+  .steam-price-table th:nth-child(2), .steam-price-table td:nth-child(2) { width:24%; }
+  .steam-price-table th:nth-child(3), .steam-price-table td:nth-child(3) { width:19%; }
+  .steam-price-table th:nth-child(4), .steam-price-table td:nth-child(4) { width:28%; }
+  .price-country-cell { align-items:flex-start; gap:4px; }
+  .price-country-flag { flex-basis:16px; width:16px; font-size:13px; }
+  .req-grid { grid-template-columns:minmax(0,1fr); gap:14px; }
+  .req-col { padding:18px 16px; }
+  .req-item { gap:12px; padding:11px 0; font-size:12.5px; }
+  .req-item b { flex-basis:76px; width:76px; }
+}
+
+
+/* Final price-history layout overrides: make the table span the whole card. */
+[data-panel="prices"] { width:100%; min-width:0; }
+[data-panel="prices"] .price-history-card { display:block; width:100%; max-width:none; min-width:0; }
+[data-panel="prices"] .price-regions { display:block !important; width:100%; max-width:none; min-width:0; }
+[data-panel="prices"] .steam-price-table-wrap { display:block; width:100%; max-width:none; overflow-x:hidden; }
+[data-panel="prices"] .steam-price-table { width:100%; min-width:0; table-layout:fixed; }
+.price-country-flag { flex:0 0 22px; width:22px; height:16px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; }
+.price-country-flag img { display:block; width:22px; height:15px; object-fit:cover; border-radius:2px; }
+@media (max-width:560px) {
+  [data-panel="prices"] .steam-price-table th, [data-panel="prices"] .steam-price-table td { padding:7px 3px; font-size:9.5px; }
+  [data-panel="prices"] .steam-price-table th:first-child, [data-panel="prices"] .steam-price-table td:first-child { width:31%; }
+  [data-panel="prices"] .steam-price-table th:nth-child(2), [data-panel="prices"] .steam-price-table td:nth-child(2) { width:23%; }
+  [data-panel="prices"] .steam-price-table th:nth-child(3), [data-panel="prices"] .steam-price-table td:nth-child(3) { width:20%; }
+  [data-panel="prices"] .steam-price-table th:nth-child(4), [data-panel="prices"] .steam-price-table td:nth-child(4) { width:26%; }
+  .price-country-flag { flex-basis:16px; width:16px; height:12px; }
+  .price-country-flag img { width:16px; height:11px; }
+}
+
+/* Clear row hover feedback for the Steam price history table */
+[data-panel="prices"] .steam-price-table tbody tr {
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+[data-panel="prices"] .steam-price-table tbody tr:hover > td {
+  background-color: #dcefe7 !important;
+  color: #172b24;
+}
+[data-panel="prices"] .steam-price-table tbody tr:hover > td .price-country-flag,
+[data-panel="prices"] .steam-price-table tbody tr:hover > td .price-discount {
+  filter: none;
+}
+[data-panel="prices"] .steam-price-table tbody tr:hover > td:first-child {
+  box-shadow: inset 3px 0 0 #18a879;
+}
+
+/* ---- screenshots: clickable thumbnails + lightbox ---- */
+button.screenshot-card{padding:0;cursor:zoom-in;font:inherit;display:block;width:100%}
+button.screenshot-card:hover{transform:scale(1.015);border-color:var(--accent);box-shadow:0 8px 22px rgba(40,50,80,.18)}
+button.screenshot-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.screenshot-grid.few{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.screenshot-grid.few .screenshot-card,.screenshot-grid.few .screenshot-card:first-child{height:200px;grid-row:auto;grid-column:auto}
+body.lb-open{overflow:hidden}
+.lightbox{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:rgba(12,16,28,.9);animation:lbFade .18s ease}
+.lightbox[hidden]{display:none}
+.lb-img{max-width:92vw;max-height:86vh;border-radius:10px;box-shadow:0 20px 70px rgba(0,0,0,.55);background:#10131c;object-fit:contain;cursor:default}
+.lb-close,.lb-nav{position:absolute;border:0;color:#fff;background:rgba(255,255,255,.14);cursor:pointer;line-height:1;border-radius:50%;transition:background .15s}
+.lb-close:hover,.lb-nav:hover{background:rgba(255,255,255,.28)}
+.lb-close{top:18px;right:20px;width:42px;height:42px;font-size:28px}
+.lb-nav{top:50%;transform:translateY(-50%);width:48px;height:48px;font-size:34px;padding-bottom:4px}
+.lb-prev{left:20px}.lb-next{right:20px}
+.lightbox.single .lb-nav{display:none}
+.lb-count{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(255,255,255,.14);padding:4px 12px;border-radius:999px;font-size:12px}
+@keyframes lbFade{from{opacity:0}to{opacity:1}}
+@media(max-width:600px){.lb-nav{width:40px;height:40px;font-size:28px}.lb-prev{left:8px}.lb-next{right:8px}.lb-close{top:10px;right:10px}}
+
+/* Hero + cover merged into ONE card: the cover image is the hero background,
+   and the content card below attaches to it (no separate cover block). */
+.detail-hero { border-radius:14px 14px 0 0; min-height:320px; padding:34px 36px 30px; }
+.detail-hero::before { display:none; }
+.detail-hero .detail-title { font-size:clamp(28px,4vw,38px); }
+.detail-content-card { padding-top:24px; }
+@media (max-width:980px){ .detail-hero { min-height:280px; } }
+@media (max-width:600px){ .detail-hero { min-height:240px; padding:22px 18px; } }
+
+/* Tags on the game page: neutral by default, only the key tags (is-key) keep their colour.
+   Colour comes back on hover so the tag's category is still discoverable. */
+.detail-content-card .tag-chip:not(.is-key) {
+  color: var(--text-dim);
+  border-color: var(--border);
+  background: var(--surface-2);
+  box-shadow: none;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.detail-content-card .tag-chip:not(.is-key) .tag-chip-icon { display: none; }
+.detail-content-card .tag-chip:not(.is-key):hover {
+  color: var(--tag-color);
+  border-color: var(--tag-color);
+  background: color-mix(in srgb, var(--tag-color) 8%, transparent);
+}

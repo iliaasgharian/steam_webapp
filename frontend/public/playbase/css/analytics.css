@@ -1,0 +1,17 @@
+/* Analytics page */
+
+  /* ================= ANALYTICS PAGE ================= */
+  .lb-table { width:100%; border-collapse:collapse; }
+  .lb-table th { text-align:left; font-size:11px; color:var(--text-faint); font-weight:600; padding:0 10px 10px; border-bottom:1px solid var(--border); }
+  .lb-table td { padding:12px 10px; border-bottom:1px solid var(--border-soft); font-size:13px; }
+  .lb-table tr:last-child td { border-bottom:none; }
+  .lb-rank { font-family:var(--font-mono); color:var(--text-faint); width:26px; }
+  .lb-name { font-weight:600; display:flex; align-items:center; gap:10px; }
+  .lb-swatch { width:8px; height:26px; border-radius:2px; }
+  .lb-num { font-family:var(--font-mono); text-align:right; }
+  .lb-delta.up { color:var(--good); }
+  .lb-delta.down { color:var(--bad); }
+  .analytics-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+  .chart-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px 22px; }
+  .chart-title { font-size:13.5px; font-weight:600; margin-bottom:2px; }
+  .chart-sub { font-size:11.5px; color:var(--text-faint); margin-bottom:16px; }

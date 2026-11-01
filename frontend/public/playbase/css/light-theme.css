@@ -1,0 +1,52 @@
+/* Light theme overrides — loaded LAST so they win over the files above */
+
+/* ===== LIGHT THEME OVERRIDES — placed last so they win ===== */
+html,body{background:var(--bg);color:var(--text)}
+.navbar.scrolled{background:rgba(236,238,242,.88);box-shadow:0 6px 20px rgba(40,50,80,.08)}
+.dropdown{box-shadow:0 16px 38px rgba(40,50,80,.16)}
+.search-modal{box-shadow:0 24px 60px rgba(40,50,80,.22)}
+
+/* Steam Intelligence cards */
+.intel-card{background:linear-gradient(145deg,#fff,#F4F5F9);border-color:rgba(111,79,240,.22);box-shadow:0 10px 30px rgba(40,50,80,.08)}
+.intel-card:before{background:rgba(15,163,122,.10)}
+.timeline-item{border-left-color:var(--border)}
+
+/* Hybrid design system */
+.hero{background:radial-gradient(circle at 78% 25%,rgba(15,163,122,.09),transparent 30%),radial-gradient(circle at 15% 55%,rgba(111,79,240,.07),transparent 32%)}
+.detail-hero{border:1px solid var(--border)!important;box-shadow:0 12px 36px rgba(40,50,80,.10)!important}
+.detail-cover{border:1px solid var(--border);box-shadow:0 16px 40px rgba(40,50,80,.16)}
+.detail-content-card{background:#fff;border:1px solid var(--border);box-shadow:0 12px 36px rgba(40,50,80,.08)}
+.detail-content-card .info-card,.detail-content-card .chart-card,.detail-content-card .req-col,.detail-content-card .dlc-card,.detail-content-card .comment-card{background:var(--surface-2)!important;border-color:var(--border)!important;box-shadow:none}
+.detail-content-card .info-card:hover,.detail-content-card .chart-card:hover,.detail-content-card .dlc-card:hover{border-color:rgba(15,163,122,.4)!important}
+.pulse-card{background:#fff;border-color:var(--border);box-shadow:0 4px 14px rgba(40,50,80,.06)}
+.tabs{background:#fff;border:1px solid var(--border);backdrop-filter:none}
+.tab:hover:not(.active){background:var(--surface-2);color:var(--text)}
+.tab.active{background:linear-gradient(135deg,#0E8F69,#16B386);color:#fff;box-shadow:0 5px 16px rgba(15,163,122,.28)}
+.chart-card{background:#fff!important;border-color:var(--border)!important;box-shadow:0 8px 24px rgba(40,50,80,.07)}
+.stat-strip{background:linear-gradient(90deg,rgba(15,163,122,.08),rgba(111,79,240,.05));border-color:var(--border)}
+.tag-filter{background:#fff;box-shadow:0 4px 14px rgba(40,50,80,.06)}
+.tag-filter:hover{border-color:#BFC5D1}
+.hybrid-editorial-lead{border:1px solid var(--border);background:radial-gradient(circle at 85% 15%,rgba(15,163,122,.14),transparent 32%),linear-gradient(145deg,#fff,#F1F3F7);box-shadow:0 14px 40px rgba(40,50,80,.08)}
+.hybrid-side-stat{border:1px solid var(--border);background:linear-gradient(145deg,#fff,#F1F3F7)}
+.hybrid-side-stat strong{color:var(--text)}
+.person-card.hybrid-person-card{background:#fff;border:1px solid var(--border);box-shadow:0 8px 26px rgba(40,50,80,.07)}
+.person-card.hybrid-person-card:hover{box-shadow:0 16px 36px rgba(40,50,80,.14)}
+.hybrid-person-card .person-avatar{background:var(--surface-2)}
+.hybrid-person-card .person-pill{border-color:var(--border);background:var(--surface-2)}
+.btn-primary:hover,.nav-cta:hover{box-shadow:0 10px 24px rgba(111,79,240,.25)}
+
+/* Hover preview panel on game tiles */
+.game-tile .tile-hover-panel{background:#fff!important;border:1px solid var(--border)!important;box-shadow:0 18px 44px rgba(40,50,80,.22)!important;color:var(--text)}
+.tile-hover-panel:before{background:#fff!important;border-left-color:var(--border)!important;border-bottom-color:var(--border)!important}
+.tile-hover-top{border-bottom-color:var(--border)}
+.tile-hover-stats>div{background:var(--surface-2)!important;border-color:var(--border)!important}
+.tile-hover-stats b{color:var(--text)!important}
+
+/* Overlays on art / mobile menu */
+.mobile-menu{background:linear-gradient(180deg,#fff,#F1F3F7);box-shadow:-20px 0 50px rgba(40,50,80,.18)}
+.rank-badge{background:rgba(255,255,255,.94);color:var(--gold)}
+.count-box{background:var(--surface-2)}
+.screenshot-card span{color:#fff;background:rgba(20,24,40,.55)}
+.range-handle{border-color:#fff}
+.loader{background:var(--bg)}
+::selection{background:var(--accent);color:#fff}

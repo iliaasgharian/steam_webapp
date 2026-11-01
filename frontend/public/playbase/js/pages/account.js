@@ -1,0 +1,155 @@
+// Front-end account prototype. Real authentication requires a server/backend.
+function escapeHTML(value){return String(value??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
+function getPlaybaseUser(){
+  try {
+    const u = JSON.parse(localStorage.getItem('playbase-user') || 'null');
+    if (u) {   // the profile photo lives in its own key (per email), so it survives log out / log in.
+               // It is a NON-enumerable property: JSON.stringify(user) elsewhere will not copy the big image into 'playbase-user'.
+      Object.defineProperty(u, 'photo', { value: localStorage.getItem(photoKey(u)) || null, writable: true, configurable: true, enumerable: false });
+    }
+    return u;
+  } catch(e){ return null; }
+}
+const photoKey = u => 'playbase-photo:' + String((u && u.email) || '').toLowerCase();
+function setProfilePhoto(user, dataUrl){          // dataUrl = null removes the photo; throws if the browser storage is full
+  if (dataUrl) localStorage.setItem(photoKey(user), dataUrl); else localStorage.removeItem(photoKey(user));
+  user.photo = dataUrl || null;
+}
+// Crop to a centered square, shrink to 256x256 and save as JPEG (~20 KB) so it fits in localStorage.
+function readProfilePhoto(file, done){
+  if (!file || !/^image\//.test(file.type)) return done(null, 'Please choose an image file.');
+  if (file.size > 10 * 1024 * 1024) return done(null, 'That image is too large (max 10 MB).');
+  const reader = new FileReader();
+  reader.onerror = () => done(null, 'Could not read that file.');
+  reader.onload = () => {
+    const img = new Image();
+    img.onerror = () => done(null, 'That file could not be opened as an image.');
+    img.onload = () => {
+      const S = 256, c = document.createElement('canvas'); c.width = c.height = S;
+      const m = Math.min(img.width, img.height);
+      c.getContext('2d').drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, S, S);
+      done(c.toDataURL('image/jpeg', 0.85));
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+// avatar pieces shared by the navbar button and the panel
+const avatarLetter = u => escapeHTML([...String(u.name || u.email || 'P')][0].toUpperCase());
+const avatarPhotoStyle = u => u.photo ? ` style="background-image:url('${u.photo}');background-size:cover;background-position:center;color:transparent"` : '';
+const shortName = u => [...String(u.name || 'My account').trim().split(/\s+/)[0]].slice(0, 5).join('');   // navbar shows at most 5 letters
+function getPlaybaseWishlist(){try{return JSON.parse(localStorage.getItem('playbase-wishlist')||'[]').map(String);}catch(e){return [];}}
+function setPlaybaseWishlist(ids){localStorage.setItem('playbase-wishlist',JSON.stringify([...new Set(ids.map(String))]));}
+function handleWishlistClick(event){
+ const btn=event.target.closest('.wishlist-add');if(!btn)return;
+ event.preventDefault();event.stopPropagation();
+ const id=String(btn.dataset.wishlistId||'');if(!id)return;
+ if(!getPlaybaseUser()){localStorage.setItem('playbase-wishlist-intent',id);location.hash='#/login';return;}
+ const ids=getPlaybaseWishlist();
+ if(typeof gameTileWishlistCache!=="undefined") gameTileWishlistCache=null;
+ if(ids.includes(id))setPlaybaseWishlist(ids.filter(x=>x!==id));else setPlaybaseWishlist([...ids,id]);
+ const updated=getPlaybaseWishlist().includes(id);
+ document.querySelectorAll(`.wishlist-add[data-wishlist-id="${CSS.escape(id)}"]`).forEach(el=>{
+   el.classList.toggle('is-saved',updated);el.setAttribute('aria-pressed',String(updated));
+   if(el.classList.contains('wishlist-heart')){el.setAttribute('aria-label',updated?'Remove from wishlist':'Add to wishlist');el.title=updated?'Remove from wishlist':'Add to wishlist';}
+   else{el.textContent=updated?'♥ In wishlist':'♡ Add to wishlist';}
+ });
+ const count=getPlaybaseWishlist().length;
+ document.querySelectorAll('.panel-nav[data-panel="wishlist"] i').forEach(el=>el.textContent=count);
+ document.querySelectorAll('.panel-stat-card').forEach(card=>{if(card.querySelector('span')?.textContent==='WISHLISTED GAMES'){const value=card.querySelector('b');if(value)value.textContent=count;}});
+ if(!updated&&btn.closest('.wishlist-panel-grid')){btn.closest('.tile-wrap')?.remove();const grid=document.querySelector('.wishlist-panel-grid');if(grid&&!grid.querySelector('.tile-wrap')){grid.outerHTML=`<div class="panel-empty"><span>♡</span><h2>Your wishlist starts here</h2><p>Save games from the catalog to build a list of titles you want to play.</p><a class="account-submit inline-submit" href="#/browse">Browse games →</a></div>`;}}
+}
+document.addEventListener('click',handleWishlistClick);
+function syncAccountButton(){
+  const user=getPlaybaseUser(), btn=document.getElementById('accountCta'), mobile=document.getElementById('mobileAccountLink');
+  if(btn){btn.href=user?'#/panel':'#/login';btn.innerHTML=user?`<span class="account-avatar"${avatarPhotoStyle(user)}>${user.photo?'':avatarLetter(user)}</span>`:'Log in';}
+  if(mobile){mobile.href=user?'#/panel':'#/login';mobile.innerHTML=`<span class="mobile-label"><span class="mi">◉</span>${user?'My account':'Log in / Account'}</span>`;}
+}
+function renderLogin(){
+  const user=getPlaybaseUser(); if(user){location.hash='#/panel';return;}
+  const wishlistIntent=localStorage.getItem('playbase-wishlist-intent');
+  view.innerHTML=`<section class="account-page"><div class="account-orbit orbit-one"></div><div class="account-orbit orbit-two"></div><div class="login-layout"><div class="login-story"><div class="account-kicker"><span class="status-dot"></span> YOUR GAME LIBRARY, CONNECTED</div><h1>Welcome back to<br><span>your next adventure.</span></h1><p>Sign in to keep your wishlist close, track the games you love and make your Playbase experience yours.</p><div class="login-feature-list"><div><span class="feature-icon">♡</span><span><b>Your wishlist</b><small>Keep every game you want in one place.</small></span></div><div><span class="feature-icon">↗</span><span><b>Personal dashboard</b><small>Pick up where you left off.</small></span></div><div><span class="feature-icon">⌁</span><span><b>Game discovery</b><small>Find your next favorite faster.</small></span></div></div></div><div class="login-card"><a class="login-brand" href="#/"><span class="login-brand-mark">P</span><span>Playbase</span></a><div class="login-card-heading"><h2>Log in</h2><p>${wishlistIntent ? 'Log in to add this game to your wishlist.' : 'Enter your details to access your account.'}</p></div><form id="loginForm" class="account-form"><label for="loginEmail">Email address</label><input id="loginEmail" type="email" placeholder="you@example.com" autocomplete="email" required><div class="password-label"><label for="loginPassword">Password</label><a href="#/login" id="forgotPassword">Forgot password?</a></div><div class="password-wrap"><input id="loginPassword" type="password" placeholder="Enter your password" autocomplete="current-password" minlength="4" required><button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">Show</button></div><div class="login-code-block"><button class="account-secondary code-request" id="requestLoginCode" type="button">Get demo verification code</button><div class="code-entry" id="loginCodeArea" hidden><label for="loginCode">6-digit verification code</label><input id="loginCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="Enter any 6 digits"><small>No email is sent in demo mode. Any 6-digit code is accepted.</small></div></div><div class="login-error" id="loginError" role="alert"></div><button class="account-submit" type="submit">Continue <span>→</span></button></form><div class="account-divider"><span></span> NEW TO PLAYBASE? <span></span></div><button class="account-secondary" id="createAccount">Create an account</button><p class="account-legal">By continuing, you agree to our <a href="#/">Terms</a> and <a href="#/">Privacy Policy</a>.</p><p class="prototype-note">Prototype mode: this demo stores a local profile in this browser only.</p></div></div></section>`;
+  document.getElementById('togglePassword').onclick=()=>{const i=document.getElementById('loginPassword');const show=i.type==='password';i.type=show?'text':'password';document.getElementById('togglePassword').textContent=show?'Hide':'Show';};
+  document.getElementById('forgotPassword').onclick=(e)=>{e.preventDefault();document.getElementById('loginError').textContent='Password reset will be available when account services are connected.';};
+  document.getElementById('createAccount').onclick=()=>{location.hash='#/signup';};
+  document.getElementById('requestLoginCode').onclick=()=>{document.getElementById('loginCodeArea').hidden=false;document.getElementById('loginError').textContent='Demo mode: no email was sent. Enter any 6-digit code.';document.getElementById('loginCode').focus();};
+  document.getElementById('loginForm').onsubmit=(e)=>{e.preventDefault();const email=document.getElementById('loginEmail').value.trim();const password=document.getElementById('loginPassword').value;const code=document.getElementById('loginCode').value.trim();const error=document.getElementById('loginError');if(password.length<4){error.textContent='Use at least 4 characters for this prototype.';return;}if(document.getElementById('loginCodeArea').hidden){error.textContent='Click “Get demo verification code” first.';return;}if(!/^\d{6}$/.test(code)){error.textContent='Enter any 6-digit verification code.';return;}const name=(email.split('@')[0]||'Player').replace(/[._-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());localStorage.setItem('playbase-user',JSON.stringify({name,email,joined:new Date().toISOString()}));const pendingWishlist=localStorage.getItem('playbase-wishlist-intent');if(pendingWishlist){setPlaybaseWishlist([...getPlaybaseWishlist(),pendingWishlist]);localStorage.removeItem('playbase-wishlist-intent');}syncAccountButton();location.hash='#/panel';};
+  syncAccountButton();
+}
+function renderSignup(){
+  if(getPlaybaseUser()){location.hash='#/panel';return;}
+  view.innerHTML=`<section class="account-page signup-page"><div class="account-orbit orbit-one"></div><div class="account-orbit orbit-two"></div><div class="signup-wrap"><div class="signup-intro"><a class="login-brand" href="#/"><span class="login-brand-mark">P</span><span>Playbase</span></a><span class="account-kicker"><span class="status-dot"></span> JOIN THE COMMUNITY</span><h1>Create your<br><span>Playbase account.</span></h1><p>Build your wishlist, keep track of games you love and make your discovery experience personal.</p><a class="signup-back" href="#/login">← Already have an account? Log in</a></div><div class="login-card signup-card"><div class="login-card-heading"><h2>Create account</h2><p>Enter your details to get started.</p></div><form id="signupForm" class="account-form"><label for="signupName">Full name</label><input id="signupName" type="text" placeholder="Your name" autocomplete="name" minlength="2" required><label for="signupEmail">Email address</label><input id="signupEmail" type="email" placeholder="you@example.com" autocomplete="email" required><label for="signupPassword">Password</label><input id="signupPassword" type="password" placeholder="At least 4 characters" autocomplete="new-password" minlength="4" required><label for="signupConfirm">Confirm password</label><input id="signupConfirm" type="password" placeholder="Repeat your password" autocomplete="new-password" minlength="4" required><div class="login-code-block"><button class="account-secondary code-request" id="requestSignupCode" type="button">Get demo verification code</button><div class="code-entry" id="signupCodeArea" hidden><label for="signupCode">6-digit verification code</label><input id="signupCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="Enter any 6 digits"><small>No email is sent in demo mode. Any 6-digit code is accepted.</small></div></div><div class="login-error" id="signupError" role="alert"></div><button class="account-submit" type="submit">Create account <span>→</span></button></form><p class="account-legal">By creating an account, you agree to our <a href="#/">Terms</a> and <a href="#/">Privacy Policy</a>.</p><p class="prototype-note">Demo mode: this profile is saved only in this browser.</p></div></div></section>`;
+  document.getElementById('requestSignupCode').onclick=()=>{document.getElementById('signupCodeArea').hidden=false;document.getElementById('signupError').textContent='Demo mode: no email was sent. Enter any 6-digit code.';document.getElementById('signupCode').focus();};
+  document.getElementById('signupForm').onsubmit=e=>{e.preventDefault();const name=document.getElementById('signupName').value.trim();const email=document.getElementById('signupEmail').value.trim();const password=document.getElementById('signupPassword').value;const confirm=document.getElementById('signupConfirm').value;const code=document.getElementById('signupCode').value.trim();const error=document.getElementById('signupError');if(password.length<4){error.textContent='Password must contain at least 4 characters.';return;}if(password!==confirm){error.textContent='Passwords do not match.';return;}if(document.getElementById('signupCodeArea').hidden){error.textContent='Click “Get demo verification code” first.';return;}if(!/^\d{6}$/.test(code)){error.textContent='Enter any 6-digit verification code.';return;}localStorage.setItem('playbase-user',JSON.stringify({name,email,joined:new Date().toISOString()}));localStorage.setItem('playbase-demo-password',password);const pendingWishlist=localStorage.getItem('playbase-wishlist-intent');if(pendingWishlist){setPlaybaseWishlist([...getPlaybaseWishlist(),pendingWishlist]);localStorage.removeItem('playbase-wishlist-intent');}syncAccountButton();location.hash='#/panel';};
+  syncAccountButton();
+}
+
+
+function setupSecuritySettings(user){
+ const send=document.getElementById('sendSecurityCode');
+ if(!send)return;
+ const feedback=document.getElementById('securityFeedback');
+ const codeArea=document.getElementById('securityCodeArea');
+ const setFeedback=(msg,ok=false)=>{feedback.textContent=msg;feedback.classList.toggle('success',ok);};
+ send.onclick=()=>{
+   const newEmail=document.getElementById('changeEmail').value.trim();
+   const newPassword=document.getElementById('changePassword').value;
+   const confirm=document.getElementById('changePasswordConfirm').value;
+   if(!newEmail&&!newPassword){setFeedback('Enter a new email or a new password first.');return;}
+   if(newPassword && newPassword.length<8){setFeedback('Use at least 8 characters for the new password.');return;}
+   if(newPassword!==confirm){setFeedback('The new passwords do not match.');return;}
+   codeArea.hidden=false;
+   setFeedback('Demo mode: no email was sent. Enter any 6-digit code to continue.',true);
+   document.getElementById('securityCode').focus();
+ };
+ document.getElementById('verifySecurityCode').onclick=()=>{
+   const code=document.getElementById('securityCode').value.trim();
+   const newEmail=document.getElementById('changeEmail').value.trim();
+   const newPassword=document.getElementById('changePassword').value;
+   if(!/^\d{6}$/.test(code)){setFeedback('Enter any 6-digit code to continue.');return;}
+   if(newEmail)user.email=newEmail;
+   localStorage.setItem('playbase-user',JSON.stringify(user));
+   if(newPassword)localStorage.setItem('playbase-demo-password',newPassword);
+   syncAccountButton();
+   document.getElementById('changeEmail').value='';
+   document.getElementById('changePassword').value='';
+   document.getElementById('changePasswordConfirm').value='';
+   document.getElementById('securityCode').value='';
+   codeArea.hidden=true;
+   setFeedback('Demo verification accepted. Your changes were saved in this browser only.',true);
+   const emailLine=document.querySelector('.panel-user-mini small');
+   if(emailLine)emailLine.textContent=user.email;
+ };
+}
+
+function renderAccountPanel(){
+ const user=getPlaybaseUser();if(!user){location.hash='#/login';return;}
+ const initials=(user.name||user.email).charAt(0).toUpperCase();
+ view.innerHTML=`<section class="panel-page"><div class="panel-shell"><aside class="panel-sidebar"><a class="panel-brand" href="#/"><span class="login-brand-mark">P</span><span>Playbase <small>PLAYER SPACE</small></span></a><div class="panel-user-mini"><span class="panel-avatar" id="panelAvatar" title="Change photo"${avatarPhotoStyle(user)}>${user.photo?'':initials}</span><span><b>${escapeHTML(user.name||'Player')}</b><small>${escapeHTML(user.email)}</small></span></div><div class="panel-nav-label">WORKSPACE</div><button class="panel-nav active" data-panel="overview"><span>▦</span> Overview</button><button class="panel-nav" data-panel="wishlist"><span>♡</span> Wishlist <i>${getPlaybaseWishlist().length}</i></button><button class="panel-nav" data-panel="recent"><span>◷</span> Recently viewed</button><button class="panel-nav" data-panel="mixes"><span>✣</span> Completed mixes <i id="mixCount">0</i></button><div class="panel-nav-label">PREFERENCES</div><button class="panel-nav" data-panel="settings"><span>⚙</span> Account settings</button><div class="panel-sidebar-bottom"><a href="#/browse">← Explore games</a><button id="logoutButton"><span>↗</span> Log out</button></div></aside><div class="panel-main"><header class="panel-topbar"><div><span class="panel-breadcrumb">PLAYER SPACE / <b id="panelCrumb">OVERVIEW</b></span><h1 id="panelTitle">Your dashboard</h1></div><a class="panel-explore" href="#/browse">Explore games <span>↗</span></a></header><div id="panelContent"></div></div></div></section>`;
+ const content=document.getElementById('panelContent');
+ document.getElementById('panelAvatar').onclick=()=>showPanel('settings');
+ function showPanel(tab){document.querySelectorAll('.panel-nav[data-panel]').forEach(b=>b.classList.toggle('active',b.dataset.panel===tab));const titles={overview:'Your dashboard',wishlist:'Your wishlist',recent:'Recently viewed',mixes:'Completed mixes',settings:'Account settings'};document.getElementById('panelTitle').textContent=titles[tab];document.getElementById('panelCrumb').textContent=tab.toUpperCase();
+ if(tab==='overview') content.innerHTML=`<div class="panel-welcome"><div><span class="account-kicker"><span class="status-dot"></span> PLAYER OVERVIEW</span><h2>Good to see you, ${escapeHTML((user.name||'Player').split(' ')[0])}.</h2><p>Your personal space for everything you want to play next.</p></div><div class="welcome-mark">P<span>+</span></div></div><div class="panel-stats"><div class="panel-stat-card"><span>WISHLISTED GAMES</span><b>${getPlaybaseWishlist().length}</b><small>Build your next-play list</small><i>♡</i></div><div class="panel-stat-card"><span>RECENTLY VIEWED</span><b>${JSON.parse(localStorage.getItem('playbase-recent-games')||'[]').length}</b><small>Your browsing history</small><i>◷</i></div><div class="panel-stat-card"><span>ACCOUNT STATUS</span><b class="status-active">Active</b><small>Profile ready to personalize</small><i>✓</i></div></div><div class="panel-lower-grid"><div class="panel-box"><div class="panel-box-heading"><div><span class="panel-eyebrow">GET STARTED</span><h3>Make Playbase yours</h3></div><span class="panel-heading-icon">✦</span></div><a class="panel-action-row" href="#/browse"><span class="panel-action-icon">⌕</span><span><b>Discover games</b><small>Browse the catalog and find something new.</small></span><strong>→</strong></a><button class="panel-action-row panel-action-button" data-panel="wishlist"><span class="panel-action-icon">♡</span><span><b>Build your wishlist</b><small>Keep track of games you want to play.</small></span><strong>→</strong></button></div><div class="panel-box account-summary"><span class="panel-eyebrow">YOUR PROFILE</span><div class="summary-profile"><span class="panel-avatar large">${initials}</span><div><b>${escapeHTML(user.name||'Player')}</b><small>${escapeHTML(user.email)}</small></div></div><div class="summary-line"><span>Member since</span><b>${new Date(user.joined||Date.now()).toLocaleDateString(undefined,{month:'short',year:'numeric'})}</b></div><button class="summary-edit" data-panel="settings">Edit profile <span>→</span></button></div></div>`;
+ else if(tab==='wishlist'){const ids=getPlaybaseWishlist();const savedGames=ids.map(id=>GAMES.find(g=>String(g.id)===id)).filter(Boolean);content.innerHTML=savedGames.length?`<p class="wishlist-panel-note">${savedGames.length} saved game${savedGames.length===1?'':'s'}</p><div class="grid wishlist-panel-grid">${savedGames.map(gameTile).join('')}</div>`:`<div class="panel-empty"><span>♡</span><h2>Your wishlist starts here</h2><p>Save games from the catalog to build a list of titles you want to play.</p><a class="account-submit inline-submit" href="#/browse">Browse games →</a></div>`;}
+ else if(tab==='recent'){const recentIds=JSON.parse(localStorage.getItem('playbase-recent-games')||'[]');const recentGames=recentIds.map(id=>GAMES.find(g=>String(g.id)===String(id))).filter(Boolean);content.innerHTML=recentGames.length?`<p class="wishlist-panel-note">${recentGames.length} recently viewed game${recentGames.length===1?'':'s'}</p><div class="grid wishlist-panel-grid">${recentGames.map(gameTile).join('')}</div><button class="account-secondary" id="clearRecentGames">Clear history</button>`:`<div class="panel-empty"><span>◷</span><h2>No games viewed yet</h2><p>Open a game's detail page and it will appear here automatically.</p><a class="account-submit inline-submit" href="#/browse">Explore games →</a></div>`;document.getElementById('clearRecentGames')?.addEventListener('click',()=>{localStorage.removeItem('playbase-recent-games');showPanel('recent');});}
+ else if(tab==='mixes'){const mixes=JSON.parse(localStorage.getItem('playbase-mixes')||'[]');const counter=document.getElementById('mixCount');if(counter)counter.textContent=mixes.length;content.innerHTML=mixes.length?`<div class="mix-history-intro"><span class="panel-eyebrow">YOUR GAME MIXER HISTORY</span><h2>${mixes.length} saved mix${mixes.length===1?'':'es'}</h2><p>All the combinations you saved from Game Mixer, in one place.</p></div><div class="mix-history-grid">${mixes.slice().reverse().map(m=>`<article class="mix-history-card"><div class="mix-history-symbol"><span>${escapeHTML(m.gameA||'Game A')}</span><b>+</b><span>${escapeHTML(m.gameB||'Game B')}</span></div><div class="mix-history-body"><span class="panel-eyebrow">COMPLETED MIX</span><h3>${escapeHTML(m.title||'Your game blend')}</h3><p>${escapeHTML(m.result||'A custom blend of game mechanics and themes.')}</p><small>${new Date(m.createdAt||Date.now()).toLocaleDateString()}</small></div><button class="mix-delete" data-delete-mix="${escapeHTML(m.id)}" aria-label="Delete mix">×</button></article>`).join('')}</div>`:`<div class="panel-empty mix-empty"><span>✣</span><h2>No completed mixes yet</h2><p>Try Game Mixer and save your first combination. Your saved mixes will appear here.</p><a class="account-submit inline-submit" href="#/mixer">Open Game Mixer →</a></div>`;content.querySelectorAll('[data-delete-mix]').forEach(btn=>btn.onclick=()=>{const all=JSON.parse(localStorage.getItem('playbase-mixes')||'[]').filter(m=>String(m.id)!==btn.dataset.deleteMix);localStorage.setItem('playbase-mixes',JSON.stringify(all));showPanel('mixes');});}
+ else content.innerHTML=`<div class="panel-settings"><div class="panel-box"><span class="panel-eyebrow">PERSONAL INFORMATION</span><h3>Profile details</h3><div class="photo-row"><span class="photo-preview" id="photoPreview"${avatarPhotoStyle(user)}>${user.photo?'':initials}</span><div><label class="account-secondary photo-btn" for="photoInput">Upload photo</label><input id="photoInput" type="file" accept="image/*" hidden><button class="photo-remove" id="photoRemove" type="button" ${user.photo?'':'hidden'}>Remove</button><p class="settings-feedback" id="photoFeedback">JPG, PNG or WebP. It is cropped to a square and kept in this browser only.</p></div></div><form id="profileForm" class="account-form settings-form"><label for="profileName">Display name</label><input id="profileName" value="${escapeHTML(user.name||'')}" required><button class="account-submit" type="submit">Save name <span>→</span></button><p class="settings-feedback" id="settingsFeedback"></p></form></div><div class="panel-box"><span class="panel-eyebrow">SECURITY</span><h3>Change email or password</h3><p class="settings-description">A one-time verification code must be sent to your current email before either change can be saved. This requires the Playbase email service to be configured.</p><div class="security-form"><label for="changeEmail">New email address (optional)</label><input id="changeEmail" type="email" placeholder="new-address@example.com"><label for="changePassword">New password (optional)</label><input id="changePassword" type="password" minlength="8" placeholder="At least 8 characters"><label for="changePasswordConfirm">Confirm new password</label><input id="changePasswordConfirm" type="password" minlength="8" placeholder="Repeat new password"><button class="account-submit" id="sendSecurityCode" type="button">Send code to current email <span>→</span></button><div id="securityCodeArea" hidden><label for="securityCode">Verification code</label><input id="securityCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-digit code"><button class="account-submit" id="verifySecurityCode" type="button">Verify code and save <span>✓</span></button></div><p class="settings-feedback" id="securityFeedback" role="status"></p></div></div><div class="panel-box"><span class="panel-eyebrow">SESSION</span><h3>Account session</h3><p class="settings-description">This prototype still stores the local profile in this browser. For production, connect a real account database and secure authentication.</p><button class="account-secondary danger-secondary" id="settingsLogout">Log out of this browser</button></div></div>`;
+ content.querySelectorAll('[data-panel]').forEach(b=>b.onclick=()=>showPanel(b.dataset.panel));const photoInput=document.getElementById('photoInput');
+ if(photoInput){
+  const fb=document.getElementById('photoFeedback'), removeBtn=document.getElementById('photoRemove');
+  const paint=()=>{['photoPreview','panelAvatar'].forEach(id=>{const el=document.getElementById(id);if(!el)return;
+    if(user.photo){el.style.backgroundImage=`url('${user.photo}')`;el.style.backgroundSize='cover';el.style.backgroundPosition='center';el.style.color='transparent';el.textContent='';}
+    else{el.style.backgroundImage='';el.style.backgroundSize='';el.style.color='';el.textContent=initials;}});
+    removeBtn.hidden=!user.photo;syncAccountButton();};
+  photoInput.onchange=()=>readProfilePhoto(photoInput.files[0],(data,err)=>{
+    photoInput.value='';
+    if(err){fb.textContent=err;return;}
+    try{setProfilePhoto(user,data);}catch(e){fb.textContent='Could not save the photo (browser storage is full).';return;}
+    paint();fb.textContent='Profile photo updated.';});
+  removeBtn.onclick=()=>{setProfilePhoto(user,null);paint();fb.textContent='Profile photo removed.';};
+ }
+ const pf=document.getElementById('profileForm');if(pf)pf.onsubmit=e=>{e.preventDefault();user.name=document.getElementById('profileName').value.trim();localStorage.setItem('playbase-user',JSON.stringify(user));syncAccountButton();document.getElementById('settingsFeedback').textContent='Display name updated.';};setupSecuritySettings(user);document.getElementById('settingsLogout')?.addEventListener('click',logout);}
+ function logout(){localStorage.removeItem('playbase-user');syncAccountButton();location.hash='#/';}
+ document.querySelectorAll('.panel-nav[data-panel]').forEach(b=>b.onclick=()=>showPanel(b.dataset.panel));document.getElementById('logoutButton').onclick=logout;showPanel('overview');syncAccountButton();
+}
+window.addEventListener('hashchange',syncAccountButton);
